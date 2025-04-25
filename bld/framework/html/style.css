@@ -1,0 +1,241 @@
+body {
+  background: url(img/bg1.png) no-repeat center/cover;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: hidden;
+  backdrop-filter: blur(3px);
+  position: relative
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: -1
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 2rem
+}
+
+.logo {
+  width: 215px;
+  height: auto;
+  margin-bottom: 1rem
+}
+
+.titleHeader {
+  font: 700 2rem Montserrat, sans-serif;
+  color: #fff;
+  margin-top: .8rem
+}
+
+.frameworkHeader {
+  font: 700 2rem Montserrat, sans-serif;
+  color: #fff;
+  margin-top: .8rem
+}
+
+.characterList {
+  margin-top: 1rem;
+  margin-bottom: .3rem
+}
+
+.characterItem {
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+.btn {
+  margin: 5px
+}
+
+:root {
+  --spacing: 1rem
+}
+
+::selection {
+  background-color: transparent
+}
+
+label {
+  color: white;
+}
+
+h5 {
+  color: white;
+}
+
+.custom-btn-hover {
+  width: 150px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 10px;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.custom-btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.select-btn-hover {
+  width: fit-content;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 10px;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.select-btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.delete-btn-hover {
+  width: 45px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 10px;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.delete-btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.edit-btn-hover {
+  width: 45px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 10px;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.edit-btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.create-btn-hover {
+  width: 150px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 5px;
+  height: 40px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 10px;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.create-btn-hover:hover {
+  background-position: 100% 0;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.custom-btn-hover:focus {
+  outline: none;
+}
+
+.select-btn-hover:focus {
+  outline: none;
+}
+
+.delete-btn-hover:focus {
+  outline: none;
+}
+
+.edit-btn-hover:focus {
+  outline: none;
+}
+
+.create-btn-hover:focus {
+  outline: none;
+}
+
+.custom-btn-hover.color-1 {
+  background-image: linear-gradient(to right, #e15125, #a1351a, #9e2118, #f88d00);
+}
+
+.custom-btn-hover.color-2 {
+  background-image: linear-gradient(to right, #d41010, #911515, #791710, #f80000);
+}
+.select-btn-hover.color-1 {
+  background-image: linear-gradient(to right, #1c6fbd, #0059be, #054894, #0088e2);
+}
+
+.delete-btn-hover.color-1 {
+  background-image: linear-gradient(to right, #e12525, #be0000, #850606, #d30000);
+}
+.edit-btn-hover.color-1 {
+  background-image: linear-gradient(to right, #1f9c13, #349e02, #0c8112, #00d323);
+}
+
+.create-btn-hover.color-1 {
+  background-image: linear-gradient(to right, #8f8f8f, rgb(104, 104, 104), #4e4e4e, #808080);
+}
