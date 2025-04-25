@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>eaed0a41-728d-42d6-ac61-ca5f9ce9eb77</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Common.Server</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CallbackHandlerEntry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DiscordAlertType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\EntityType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\HttpHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\RequestInternalData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\RequestResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\VehicleSeat.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ServerCommonScript.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
+  </ItemGroup>
+</Project>

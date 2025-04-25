@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>aadfe3f4-f3be-4913-b375-a27afba0bbb5</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Common.Client</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Callbacks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientCommonScript.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PedConfigFlag.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Controls.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Convar.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hud.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\Button.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\DrawableType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\Key.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\Minimap.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\NeonLights.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\PadIndex.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\PedComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\TypeCache.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)models\Wheel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PedStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VehicleConfigFlag.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Models\" />
+  </ItemGroup>
+</Project>
