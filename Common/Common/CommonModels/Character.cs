@@ -9,8 +9,8 @@ namespace Common.Models
         public string LastName { get; set; }
         public string Gender { get; set; }
         public DateTime DoB { get; set; }
-        public float CashOnHand {  get; set; }
-        public float BankAmount { get; set; }
+        public int Cash {  get; set; }
+        public int Bank { get; set; }
         public string Department { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-const backgrounds = ["bg1.png", "bg2.png", "bg3.png", "bg4.png", "bg5.png", "bg6.png", "bg7.png", "bg8.png"]
+const backgrounds = ["bg1.jpg", "bg2.jpg", "bg3.jpg"]
 let lastBackground = "";
 let allowedDepts = [];
 let numOfCharacter;
@@ -156,8 +156,8 @@ function createCharacter(fn, ln, cash, bank, gender, department, dob) {
     firstName: fn,
     lastName: ln,
     gender: gender,
-    cash: cash.toString(),
-    bank: bank.toString(),
+    cash: cash,
+    bank: bank,
     department: department,
     dob: dob
   }));
@@ -342,34 +342,25 @@ function setupCharacters(characters) {
       Cash,
       Bank
     } = character;
-    if (Department != null && Department != undefined) {
+    if (Department !== null && Department !== undefined) {
       if (Department == "CIV") Department = "Civ";
 
       const $listItem = $("<li>").addClass("characterItem");
       const $playButton = $("<button>")
-        .addClass("select-btn-hover color-1")
+        .addClass("btn btn-primary")
         .text(`Play As: ${FirstName} ${LastName} (${Department})`)
         .click(() => {
           playAsCharacter(FirstName, LastName, Cash, Bank, Gender, Department, DoB);
         });
-      const $editButton = $('<button>')
-        .addClass('edit-btn-hover color-1')
-        .addClass('fa-solid fa-pen-to-square')
+      const $editButton = $("<button>")
+        .addClass("btn btn-success")
+        .text("Edit")
         .click(() => {
-          setupAndDisplayEditCharacterModal(FirstName, LastName, DoB, Gender, Department, CharacterId);
-        });
-
-      /*
-      const $deleteButton = $('<button>')
-        .addClass('delete-btn-hover color-1')
-        .addClass('fa-solid fa-trash-can')
-        .click(() => {
-          setupAndDisplayDeleteCharacterModal(FirstName, LastName, CharacterId, Department);
+          setupEditCharacterModal(FirstName, LastName, DoB, Gender, Department, CharacterId);
       });
-      */
+
       $listItem.append($playButton, $editButton);
       $listItem.append(`<button type="button" class="btn btn-danger" onclick="setupAndDisplayDeleteModal('${FirstName}', '${LastName}', '${CharacterId}', '${Department}')"><i class="fa-solid fa-trash-can"></i></button>`);
-      //$listItem.append($deleteButton);
       $charList.append($listItem);
     }
   });
@@ -402,14 +393,14 @@ function hideModal(modalId) {
   $(`#${modalId}`).modal('hide');
 }
 
-function closeNUI() {
-  $.post('https://framework/closeNUI')
+function closeNui() {
+  $.post('https://framework/closeFrameworkNui')
 }
 
 // NUI Handlers
 $(function() {
   window.addEventListener('message', function(event) {
-    if (event.data.type === 'FRAMEWORK_SHOW_NUI') {
+    if (event.data.type === 'SHOW_FRAMEWORK_NUI') {
       chooseBackground();
 
       allowedDepts = event.data.departments;
@@ -422,7 +413,7 @@ $(function() {
       setupCharacters(event.data.characters);
       $('#mainBody').css('display', 'block');
 
-    } else if (event.data.type === 'FRAMEWORK_CLOSE_NUI') {
+    } else if (event.data.type === 'CLOSE_FRAMEWORK_NUI') {
       $('body').fadeOut(300, function() {
         $('body').css('display', 'none');
       });

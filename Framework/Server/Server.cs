@@ -39,12 +39,12 @@ namespace Framework.Server
                     TriggerClientEvent("chat:addMessage", new { templateId = "TemplateGrey", color = new[] { 255, 255, 255 }, multiline = true, args = new[] { "", $"Current AOP is now ^5^*{_currentAop}^r^7" } });
 
                     SetConvarServerInfo("AreaOfPatrol", _currentAop);
-                    Log.InfoOrError($"{player.Name} used the command: /aop with a AOP set to {_currentAop}");
+                    Log.InfoOrError($"{player.Name} used the command: /aop with a AOP set to {_currentAop}", "FRAMEWORK");
                 }
                 else
                 {
                     player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, multiline = true, args = new[] { "SYSTEM", "You don't have permission to this command." } });
-                    Log.InfoOrError($"{player.Name} attempted to use the /aop command with arguments but failed because they permissions (permission ace: framework.ChangeAop).");
+                    Log.InfoOrError($"{player.Name} attempted to use the /aop command with arguments but failed because they permissions (permission ace: framework.ChangeAop).", "FRAMEWORK");
                 }
             }
             else
@@ -67,7 +67,7 @@ namespace Framework.Server
             else
             {
                 player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, multiline = true, args = new[] { "SYSTEM", "You don't have access to this command." } });
-                Log.InfoOrError($"{player.Name} attempted to use the /resetaop command with arguments but failed because they permissions (permission ace: framework.ResetAop).");
+                Log.InfoOrError($"{player.Name} attempted to use the /resetaop command with arguments but failed because they permissions (permission ace: framework.ResetAop).", "FRAMEWORK");
             }
         }
 
@@ -83,12 +83,12 @@ namespace Framework.Server
                     TriggerClientEvent("chat:addMessage", new { templateId = "TemplateGrey", color = new[] { 255, 255, 255 }, multiline = true, args = new[] { "", $"Current AOP is now ^5^*{_currentAop}^r^7" } });
 
                     SetConvarServerInfo("AreaOfPatrol", _currentAop);
-                    Log.InfoOrError($"{player.Name} used the command: /aop with a AOP set to {_currentAop}");
+                    Log.InfoOrError($"{player.Name} used the command: /aop with a AOP set to {_currentAop}", "FRAMEWORK");
                 }
                 else
                 {
                     player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, multiline = true, args = new[] { "SYSTEM", "You don't have access to this command." } });
-                    Log.InfoOrError($"{player.Name} attempted to use the /setaop command but couldn't because they permissions (permission ace: framework.ChangeAop)");
+                    Log.InfoOrError($"{player.Name} attempted to use the /setaop command but couldn't because they permissions (permission ace: framework.ChangeAop)", "FRAMEWORK");
                 }
             }
         }

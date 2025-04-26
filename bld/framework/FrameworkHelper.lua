@@ -96,10 +96,10 @@ RegisterNetEvent('Framework:Server:CreateCharacter', function(data)
 	  characters[#characters + 1] = character
     end
 
-    TriggerClientEvent('Framework:Client:returnCharacters', source, characters)
+    TriggerClientEvent('Framework:Client:GetCharacters', source, characters)
 end)
 
-RegisterNetEvent('Framework:Server:deleteCharacter', function(characterId)
+RegisterNetEvent('Framework:Server:DeleteCharacter', function(characterId)
     local source = source
 
     local result = MySQL.query.await('DELETE FROM characters WHERE character_id = ? LIMIT 1', {characterId})
@@ -123,11 +123,11 @@ RegisterNetEvent('Framework:Server:deleteCharacter', function(characterId)
 	  characters[#characters + 1] = character
     end
 
-    TriggerClientEvent('Framework:Client:returnCharacters', source, characters)
+    TriggerClientEvent('Framework:Client:GetCharacters', source, characters)
 end)
 
 
-RegisterNetEvent('Framework:Server:editCharacter', function(data)
+RegisterNetEvent('Framework:Server:EditCharacter', function(data)
     local source = source
 
     local characterData = json.decode(data)
@@ -180,7 +180,7 @@ local function discordRequest(method, endpoint, jsondata)
     local data
     local headers = {
         ['Content-Type'] = 'application/json',
-        ['Authorization'] = 'Bot DISCORD_BOT_TOKEN'
+        ['Authorization'] = 'Bot BOT_TOKEN'
     }
 
     PerformHttpRequest(('https://discord.com/api/%s'):format(endpoint), function(errorCode, resultData, resultHeaders)
@@ -192,7 +192,7 @@ local function discordRequest(method, endpoint, jsondata)
     return data
 end
 
-RegisterNetEvent('Framework:Server:getDiscordRoles', function()
+RegisterNetEvent('Framework:Server:GetDiscordRoles', function()
     local source = source
     local discordId = getPlayerIdentifierFromType('discord', source)
 
@@ -200,7 +200,7 @@ RegisterNetEvent('Framework:Server:getDiscordRoles', function()
         return
     end
 
-    local endpoint = string.format('guilds/%s/members/%s', 'DISCORD_GUILD_ID', discordId)
+    local endpoint = string.format('guilds/%s/members/%s', 'GUILD_ID', discordId)
     local member = discordRequest('GET', endpoint, {})
     Wait(100)
 
@@ -234,7 +234,7 @@ RegisterNetEvent('Framework:Server:getDiscordRoles', function()
 end)
 
 Citizen.CreateThreadNow(function()
-    local guild = discordRequest('GET', 'guilds/DISCORD_GUILD_ID', {})
+    local guild = discordRequest('GET', 'guilds/GUILD_ID', {})
 
     if guild.code == 200 then
         local data = json.decode(guild.data)

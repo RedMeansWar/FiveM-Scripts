@@ -6,6 +6,7 @@ using Common.Models;
 using Newtonsoft.Json;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
+using System.Linq;
 
 namespace Framework.Client
 {
@@ -15,7 +16,7 @@ namespace Framework.Client
         internal bool _ran;
         internal string _currentAop = "Statewide";
         internal ISet<string> _allowedDepts = new HashSet<string>();
-        internal Character _currentCharacter;
+        public static Character _currentCharacter;
         #endregion
 
         #region Constructor
@@ -28,6 +29,8 @@ namespace Framework.Client
             RegisterNUICallback("closeFrameworkNui", CloseFrameworkNui);
             RegisterNUICallback("quitGame", QuitGame);
             RegisterNUICallback("disconnect", Disconnect);
+
+            TriggerServerEvent("Framework:Server:GetDiscordRoles");
         }
         #endregion
 
@@ -60,7 +63,7 @@ namespace Framework.Client
             if (_currentCharacter is null)
             {
                 // if the character is null then
-                Hud.SendChatMessage("You must have a character selected in the framework to use this command.");
+                Hud.SendChatMessage("You must have a character selected in the framework to use this command.", r: 255, g: 0, b: 0);
                 return;
             }
 
@@ -77,7 +80,7 @@ namespace Framework.Client
             string gender = data.GetVal<string>("gender", null);
             string department = data.GetVal<string>("department", null);
             string dob = data.GetVal<string>("dob", null);
-            string cash = data.GetVal("cash", "-1.0");
+            string cash = data.GetVal("cash", "-1");
             string bank = data.GetVal("bank", "-1.0");
 
             // we check if any of the JavaScript data is null or whitespace if so we through an error
@@ -87,7 +90,7 @@ namespace Framework.Client
                 SendNUIMessage(Json.Stringify(new { type = "FRAMEWORK_ERROR", msg = "We ran into a problem while selecting this character, please try again." }));
 
                 // log the invalid info data
-                Log.InfoOrError("Invalid character data while select character! ^");
+                Log.InfoOrError("Invalid character data while selecting this character!");
 
                 // return the result as false
                 result(new { success = false, message = "invalid character data" });
@@ -96,13 +99,13 @@ namespace Framework.Client
             }
 
             // set character attributes!
-            Character selectedCharacter = EditOrCreateCharacter(firstName, lastName, gender, dob, department, cash, bank, characterId);
+            Character selectedCharacter = CreateCharacter(firstName, lastName, gender, department, dob, cash, bank, characterId);
 
             // set the current character as the selected character
             _currentCharacter = selectedCharacter;
 
             // close the framework ui
-            SendNUIMessage(Json.Stringify(new { type = "FRAMEWORK_CLOSE_NUI" }));
+            SendNUIMessage(Json.Stringify(new { type = "CLOSE_FRAMEWORK_NUI" }));
             SetNuiFocus(false, false); // set the nui focus to false so the player can actually play the game
 
             // send a framework message saying that they are playing the character
@@ -137,12 +140,13 @@ namespace Framework.Client
                     type = "FRAMEWORK_ERROR",
                     msg = "We ran into an unexpected error creating this character, try again."
                 }));
+
                 result(new { success = false, message = "not valid character data" });
                 return;
             }
 
             // Create the character object
-            Character createdCharacter = EditOrCreateCharacter(firstName, lastName, gender, department, dob, cash, bank, "0");
+            Character createdCharacter = CreateCharacter(firstName, lastName, gender, department, dob, cash, bank, "0");
 
             // Trigger server event to handle server-sided character creation.
             TriggerServerEvent("Framework:Server:CreateCharacter", Json.Stringify(createdCharacter));
@@ -267,20 +271,21 @@ namespace Framework.Client
             }
         }
 
-        private Character EditOrCreateCharacter(string firstName, string lastName, string gender, string dob, string dept, string cash, string bank, string characterId)
+        private Character CreateCharacter(string firstName, string lastName, string gender, string department, string dob, string cash, string bank, string charId)
         {
-            Character character = new()
+            Character createdCharacter = new()
             {
-                CharacterId = int.Parse(characterId),
+                CharacterId = int.Parse(charId),
+                DoB = DateTime.Parse(dob),
                 FirstName = firstName,
                 LastName = lastName,
-                DoB = DateTime.Parse(dob),
                 Gender = gender,
-                CashOnHand = float.Parse(cash),
-                BankAmount = float.Parse(bank),
+                Department = department,
+                Cash = int.Parse(cash),
+                Bank = int.Parse(bank)
             };
 
-            return character;
+            return createdCharacter;
         }
 
         /// <summary>
@@ -297,26 +302,6 @@ namespace Framework.Client
             }
 
             return age;
-        }
-
-        private void AllDepartments(dynamic rolesJson)
-        {
-            // we check the Discord roles of a server then get Roles in a JSON format for use
-            Dictionary<string, string> roles = JsonConvert.DeserializeObject<Dictionary<string, string>>(rolesJson);
-
-            if
-            (
-                roles.ContainsValue("Development") || roles.ContainsValue("Dev") || roles.ContainsValue("Developer") || roles.ContainsValue("Founder") ||
-                roles.ContainsValue("Head Admin") || roles.ContainsValue("Owner") || roles.ContainsValue("Senior Admin") || roles.ContainsValue("Senior Administration") ||
-                roles.ContainsValue("Head Administrator") || roles.ContainsValue("Head Administration")
-            )
-            {
-                // list all departments names
-                List<string> rolesList = new() { "LSPD", "SAHP", "BCSO", "LSFD", "CIV" };
-
-                // add the departments in the framework if the user doens't have them already
-                rolesList.ForEach(AddDeptIfNotExists);
-            }
         }
 
         private void AddDeptIfNotExistIfCivilian(Dictionary<string, string> rolesJson)
@@ -339,7 +324,14 @@ namespace Framework.Client
                 Exports["spawnmanager"].spawnPlayer(true);
                 await Delay(3000);
                 Exports["spawnmanager"].setAutoSpawn(false);
-                
+
+                TriggerEvent("chat:addTemplate", "TemplateGreen", "<div style='background-color: rgba(0, 153, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateGrey", "<div style='background-color: rgba(34, 34, 34, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateRed", "<div style='background-color: rgba(255, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateBlue", "<div style='background-color: rgba(0, 128, 255, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+
+                Log.InfoOrError("Successfully registered chat templates.", "CHAT");
+
                 _ran = true;
             }
         }
@@ -347,13 +339,13 @@ namespace Framework.Client
         [EventHandler("Framework:Client:GetCharacters")]
         private void OnGetCharacters(dynamic characters)
         {
-            List<Character> characterList = JsonConvert.DeserializeObject<List<Character>>(characters);
+            List<Character> characterList = JsonConvert.DeserializeObject<List<Character>>(JsonConvert.SerializeObject(characters));
             Log.InfoOrError($"Returned {characterList.Count} character(s).", "FRAMEWORK");
 
             SetNuiFocus(true, true);
             SendNUIMessage(Json.Stringify(new
             {
-                type = "FRAMEWORK_SHOW_NUI",
+                type = "SHOW_FRAMEWORK_NUI",
                 characters = characterList,
                 departments = _allowedDepts,
                 firstLoad = _currentCharacter is null,
@@ -372,18 +364,27 @@ namespace Framework.Client
             }));
         }
 
-        [EventHandler("Framework:Client:ReturnDiscordRoles")]
-        private void OnReturnDiscordRoles(dynamic rolesJson)
+        [EventHandler("Framework:Client:GetDiscordRoles")]
+        private void OnGetDiscordRoles(dynamic rolesJson)
         {
-            Dictionary<string, string> roles = JsonConvert.DeserializeObject<IDictionary<string, string>>(rolesJson);
+            Dictionary<string, string> roles = JsonConvert.DeserializeObject<Dictionary<string, string>>(rolesJson);
 
-            AllDepartments(roles);
-            AddDeptIfNotExists("LSPD");
-            AddDeptIfNotExists("SAHP");
-            AddDeptIfNotExists("BCSO");
-            AddDeptIfNotExists("LSFD");
-            AddDeptIfNotExists("CIV");
-            AddDeptIfNotExistIfCivilian(roles);
+            if
+            (
+                roles.ContainsValue("Development") || roles.ContainsValue("Dev") || roles.ContainsValue("Developer") || roles.ContainsValue("Founder") ||
+                roles.ContainsValue("Head Admin") || roles.ContainsValue("Owner") || roles.ContainsValue("Senior Admin") || roles.ContainsValue("Senior Administration") ||
+                roles.ContainsValue("Head Administrator") || roles.ContainsValue("Head Administration")
+            )
+            {
+                List<string> rolesList = new() { "LSPD", "SAHP", "BCSO", "LSFD", "CIV" };
+                rolesList.ForEach(AddDeptIfNotExists);
+            }
+
+            if (roles.ContainsValue("LSPD")) AddDeptIfNotExists("LSPD");
+            if (roles.ContainsValue("SAHP")) AddDeptIfNotExists("SAHP");
+            if (roles.ContainsValue("BCSO")) AddDeptIfNotExists("BCSO");
+            if (roles.ContainsValue("LSFD")) AddDeptIfNotExists("LSFD");
+            if (roles.ContainsValue("Civilian Operations")) AddDeptIfNotExists("CIV");
         }
         #endregion
     }

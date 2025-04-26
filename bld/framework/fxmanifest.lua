@@ -7,6 +7,8 @@ version '1.0.0'
 
 ui_page 'html/index.html'
 
+dependency 'oxmysql'
+
 files {
 	'Newtonsoft.Json.dll',
 	'html/index.html',
@@ -19,5 +21,6 @@ client_script 'Framework.Client.net.dll'
 
 server_script {
 	'Framework.Server.net.dll',
-	'fxmanifest.lua'
+	'@oxmysql/lib/MySQL.lua',
+	'FrameworkHelper.lua'
 }

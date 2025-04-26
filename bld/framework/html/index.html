@@ -15,7 +15,7 @@
   </head>
   <body style="display: none;">
     <div class="content-container">
-      <img src="imgs/logo.png" class="logo" loading="lazy">
+      <img src="imgs/logo.jpg" class="logo" loading="lazy">
       <h2 class="frameworkHeader" id="frameworkHeader">Welcome to the RD Framework</h2>
       <h2 class="titleHeader" id="titleHeader">AOP: Statewide</h2>
       <div class="mainBody" id="mainBody" style="display: none;">
@@ -28,7 +28,7 @@
         </ul>
       </div>
       <div class="cancelButton">
-        <button class="custom-btn-hover color-1" onclick="closeNUI()">Cancel</button>
+        <button class="custom-btn-hover color-1" onclick="closeNui()">Cancel</button>
       </div>
     </div>
 
@@ -221,7 +221,26 @@
         </div>
       </div>
     </div>
-    
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-theme="dark">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-body text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-3">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12" y2="16"></line>
+            </svg>
+            <h5 class="modal-title mb-3">Error!</h5>
+            <p style="color: red;" id="errorMsg">Error: Something went wrong.</p>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.7/js/tether.min.js" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js" integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
