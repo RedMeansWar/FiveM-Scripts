@@ -905,7 +905,7 @@ namespace Common.Client
         /// <param name="rawHeading">The raw heading angle in degrees.</param>
         /// <param name="offsetDegrees">The offset angle in degrees to apply to the raw heading.</param>
         /// <returns>The final orientation angle in degrees, normalized to the range [0, 360).</returns>
-        public static float RotateEntity(this Entity entity, float rawHeading, float offsetDegrees)
+        public static float Rotate(this Entity entity, float rawHeading, float offsetDegrees)
         {
             // Calculate the initial orientation by adding the offset to the raw heading.
             float orientation = (rawHeading + offsetDegrees) % 360;

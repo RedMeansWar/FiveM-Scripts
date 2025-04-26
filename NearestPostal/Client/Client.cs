@@ -16,7 +16,7 @@ namespace NearestPostal.Client
         internal readonly List<Postal> _postals;
         internal string _routedPostal, _closestPostal;
         internal Blip _blip;
-        internal bool _displayUi;
+        internal bool _displayUi = true;
         #endregion
 
         #region Constructor
@@ -142,6 +142,11 @@ namespace NearestPostal.Client
 
             return results.OrderBy(pair => pair.Value).First().Key;
         }
+        #endregion
+
+        #region Event Handlers
+        [EventHandler("NearestPostal:Client:DisplayUi")]
+        private void OnDisplayUi(bool visable) => _displayUi = visable;
         #endregion
     }
 }
