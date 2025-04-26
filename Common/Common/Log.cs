@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using Debug = CitizenFX.Core.Debug;
 
 namespace Common
 {
@@ -10,7 +11,8 @@ namespace Common
         /// </summary>
         /// <param name="message">The message object that you want the message to say.</param>
         /// <param name="title">The custom title that you want the message to show, default is "RD INFO".</param>
-        public static void InfoOrError(object message, string title = "RD INFO") => Debug.WriteLine($"[{title ?? "RD INFO"} - {DateTime.Now:yyyyy/MM/dd HH:mm:ss}] {message ?? null}");
+        public static void InfoOrError(object message, string title = "RD INFO") 
+            => Debug.WriteLine($"[{title ?? "RD INFO"} - {DateTime.Now:yyyyy/MM/dd HH:mm:ss}] {message ?? null}");
 
         /// <summary>
         /// Logs an error with readable information such as line number, and file name. (DateTime format follows Log.Info)

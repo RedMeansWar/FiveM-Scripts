@@ -20,7 +20,21 @@ namespace Chat.Client
         #endregion
 
         #region Constructor
-        public Client() => RegisterNUICallback("chatResult", ChatResult);
+        public Client()
+        {
+            RegisterNUICallback("chatResult", ChatResult);
+
+            if (!_ran)
+            {
+                TriggerEvent("chat:addTemplate", "TemplateGreen", "<div style='background-color: rgba(0, 153, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateGrey", "<div style='background-color: rgba(34, 34, 34, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateRed", "<div style='background-color: rgba(255, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateBlue", "<div style='background-color: rgba(0, 128, 255, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+
+                Log.InfoOrError("Successfully registered chat templates.", "CHAT");
+                _ran = true;
+            }
+        }
         #endregion
 
         #region Commands
@@ -51,17 +65,18 @@ namespace Chat.Client
             _twitterName = username;
 
             Hud.SendChatMessage($"Twitter username set to ^*{username}^r", r: 0, g: 255, b: 0);
-            TriggerEvent("chat:chatMessage", "NNERP", new[] { 0, 255, 0 }, $"Twitter username set to ^*{username}^r");
+            TriggerEvent("chat:chatMessage", "SYSTEM", new[] { 0, 255, 0 }, $"Twitter username set to ^*{username}^r");
         }
         #endregion
 
         #region NUI Callbacks
-        private async void ChatResult(IDictionary<string, object> data, CallbackDelegate result)
+        private void ChatResult(IDictionary<string, object> data, CallbackDelegate result)
         {
             _chatActive = false;
             SetNuiFocus(false, false);
+
             string message = data.GetVal<string>("message", null);
-            bool cancel = data.GetVal("cancel", false);
+            bool cancel = data.GetVal("canceled", false);
 
             if (!cancel && !string.IsNullOrWhiteSpace(message))
             {
@@ -113,7 +128,7 @@ namespace Chat.Client
 
                         if (_currentCharacter?.Department == "Civ")
                         {
-                            TriggerEvent("chat:chatMessage", "NNERP", new[] { 194, 39, 39 }, "You aren't authorized to use the /rt command. You must not be and civilian character.");
+                            TriggerEvent("chat:chatMessage", "SYSTEM", new[] { 194, 39, 39 }, "You aren't authorized to use the /rt command. You must not be and civilian character.");
                             result(new { success = false, message = "not authorized" });
                             return;
                         }
@@ -220,7 +235,7 @@ namespace Chat.Client
                 string json = LoadResourceFile(GetCurrentResourceName(), "suggestions.json");
                 if (string.IsNullOrWhiteSpace(json))
                 {
-                    Log.InfoOrError("'suggesions.json' is null or whitespace? Won't be able to populate chat suggestion list. Contact a developer.");
+                    Log.InfoOrError("'suggesions.json' is null or whitespace? Won't be able to populate chat suggestion list. Contact a developer.", "CHAT");
                     _suggestions = new();
                     return;
                 }
@@ -228,17 +243,17 @@ namespace Chat.Client
                 List<ChatSuggestion> list = Json.Parse<List<ChatSuggestion>>(json);
                 if (list is null)
                 {
-                    Log.InfoOrError("Couldn't populate chat suggestion list!");
+                    Log.InfoOrError("Couldn't populate chat suggestion list!", "CHAT");
                     _suggestions = new();
                     return;
                 }
 
                 _suggestions = list;
-                Log.InfoOrError($"Loaded {_suggestions.Count} chat suggestion(s)");
+                Log.InfoOrError($"Loaded {_suggestions.Count} chat suggestion(s)", "CHAT");
             }
             catch (Exception ex)
             {
-                Log.Error("Error was thrown!", "CHAT", ex);
+                Log.Error($"Exeception was thrown!", "CHAT", ex);
             }
         }
         #endregion
@@ -375,32 +390,25 @@ namespace Chat.Client
             if (!_chatInit)
             {
                 _chatInit = true;
+
                 LoadSuggestions();
 
-                _suggestions.ForEach(s => SendNUIMessage($"{{\"type\":\"ON_SUGGESTION_ADD\",\"suggestion\":{{\"name\":\"{s.Command}\",\"help\":\"{s.Example}\",\"params\":\"\"}}}}"));
-                SetTextChatEnabled(false);
+                foreach (ChatSuggestion suggestion in _suggestions)
+                {
+                    SendNUIMessage($"{{\"type\":\"ON_SUGGESTION_ADD\",\"suggestion\":{{\"name\":\"{suggestion.Command}\",\"help\":\"{suggestion.Example}\",\"params\":\"\"}}}}");
+                }
 
+                SetTextChatEnabled(false);
                 await Delay(1000);
             }
 
-            if (!_chatActive && Controls.IsControlJustPressedRegardless(Control.MpTextChatAll) && UpdateOnscreenKeyboard() != 0)
+            if (!_chatActive && Controls.IsControlJustPressed(Control.MpTextChatAll))
             {
                 _chatActive = true;
+                SetNuiFocus(true, false);
 
-                SetNuiFocus(false, false);
                 SendNUIMessage("{\"type\":\"ON_OPEN\"}");
-
                 await Delay(10);
-            }
-
-            if (!_ran)
-            {
-                TriggerEvent("chat:addTemplate", "TemplateGreen", "<div style='background-color: rgba(0, 153, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-                TriggerEvent("chat:addTemplate", "TemplateGrey", "<div style='background-color: rgba(34, 34, 34, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-                TriggerEvent("chat:addTemplate", "TemplateRed", "<div style='background-color: rgba(255, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-                TriggerEvent("chat:addTemplate", "TemplateBlue", "<div style='background-color: rgba(0, 128, 255, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-
-                _ran = true;
             }
         }
         #endregion
