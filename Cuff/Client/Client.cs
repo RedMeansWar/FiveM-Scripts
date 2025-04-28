@@ -52,10 +52,23 @@ namespace Client
         #region Methods
         private void CuffHandler(bool isFront = false, bool isZiptie = false)
         {
-            
+            if (ClientPed.CannotDoAction())
+            {
+                Notify.Error("You can't do this right now.", true);
+                return;
+            }
+
+            Player closestPlayer = GetClosestPlayer();
+            if (closestPlayer is null)
+            {
+                Notify.Error("You need to be closer to the person you wish to cuff.", true);
+                return;
+            }
+
+            TriggerServerEvent("Cuff:Server:CuffClosestPlayer", closestPlayer.ServerId, isFront, isZiptie);
         }
 
-        private async Task CuffMeHandler(bool isFront = false, bool isZiptie = false)
+        private async void CuffMeHandler(bool isFront = false, bool isZiptie = false)
         {
             _isCuffed = !_isCuffed;
             _isFrontCuffed = isFront;
@@ -134,6 +147,69 @@ namespace Client
             {
                 Log.InfoOrError($"ERROR: 'config.ini' not configured properly or is missing. Please check if the config is there or has any data inside of it. ", "CUFF");
             }
+        }
+
+        private async void PlayCuffAnimation(int cuffer, bool isZiptie)
+        {
+            if (_isCuffed)
+            {
+                if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "cuff", 0.2f);
+
+                ClientPed.Task.ClearAll();
+                ClientPed.Task.PlayAnimation(_isFrontCuffed ? "anim@move_m@prisoner_cuffed" : "mp_arresting", "idle", 8f, -1, AnimationFlags.StayInEndFrame | AnimationFlags.AllowRotation | AnimationFlags.UpperBodyOnly);
+
+                await Delay(1000);
+                _cuffsProp = await World.CreateProp(new($"{(isZiptie ? "hei_prop_zip_tie_positioned" : "p_cs_cuffs_02_s")}"), Vector3.Zero, false, false);
+
+                Vector3 pos, rot;
+
+                if (_isFrontCuffed)
+                {
+                    pos = isZiptie ? new(-0.012f, 0f, 0.08f) : new(-.058f, .005f, .09f);
+                    rot = isZiptie ? new(340f, 95f, 120f) : new(290f, 95f, 120f);
+                }
+                else
+                {
+                    pos = isZiptie ? new(-0.020f, 0.035f, 0.06f) : new(-.055f, .06f, .04f);
+                    rot = isZiptie ? new(0.04f, 155f, 80f) : new(265f, 155f, 80f);
+                }
+
+                AttachEntityToEntity(_cuffsProp.Handle, ClientPed.Handle, GetPedBoneIndex(ClientPed.Handle, 60309), pos.X, pos.Y, pos.Z, rot.X, rot.Y, rot.Z, true, false, false, false, 0, true);
+
+                SetPedDropsWeapon(ClientPed.Handle);
+                SetPedCanPlayGestureAnims(ClientPed.Handle, false);
+
+                Tick += CuffTick;
+            }
+            else
+            {
+                await Delay(3000);
+
+                if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "uncuff", 0.2f);
+
+                ClientPed.Task.ClearAnimation("mp_arresting", "idle");
+                ClientPed.Task.ClearAnimation("anim@move_m@prisoner_cuffed", "idle");
+
+                _cuffsProp?.Delete();
+                _cuffsProp = null;
+
+                SetPedCanPlayGestureAnims(ClientPed.Handle, true);
+
+                Tick -= CuffTick;
+            }
+        }
+        #endregion
+
+        #region Event Handlers
+        [EventHandler("Cuff:Client:PlayAnimation")]
+        private void OnPlayAnimation(bool uncuff) => ClientPed.Task.PlayAnimation(uncuff ? "mp_arresting" : "rcmpaparazzo_3", uncuff ? "a_uncuff" : "poppy_arrest_cop", 4f, 4f, 3000, AnimationFlags.UpperBodyOnly, 0.595f);
+
+        [EventHandler("Cuff:Client:GetCuffedPlayer")]
+        private void OnGetCuffedPlayer(int cuffer, bool isFront, bool isZiptie)
+        {
+            _isCuffed = !_isCuffed;
+            _isFrontCuffed = isFront;
+            PlayCuffAnimation(cuffer, isZiptie);
         }
         #endregion
 
