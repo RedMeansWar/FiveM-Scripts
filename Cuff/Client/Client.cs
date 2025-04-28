@@ -151,6 +151,8 @@ namespace Client
 
         private async void PlayCuffAnimation(int cuffer, bool isZiptie)
         {
+            TriggerServerEvent("Cuff:Server:PlayAnimation", cuffer, !_isCuffed);
+
             if (_isCuffed)
             {
                 if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "cuff", 0.2f);
