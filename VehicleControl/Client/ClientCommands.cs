@@ -20,10 +20,10 @@ namespace VehicleControl.Client
         private void EngCommand() => ToggleVehicleEngine(ClientCurrentVehicle);
 
         [Command("shuffle")]
-        private void ShuffleCommand() => TriggerEvent("VehicleControl:Client:ShuffleSeats");
+        private void ShuffleCommand() => TriggerEvent("VehicleControl:Notes.Notes.Client:ShuffleSeats");
 
         [Command("shuff")]
-        private void ShuffCommand() => TriggerEvent("VehicleControl:Client:ShuffleSeats");
+        private void ShuffCommand() => TriggerEvent("VehicleControl:Notes.Notes.Client:ShuffleSeats");
 
         [Command("anchor")]
         private void AnchorCommand()
@@ -89,7 +89,7 @@ namespace VehicleControl.Client
                 }
                 else
                 {
-                    TriggerServerEvent("VehicleControl:Server:doorAction", vehicle.NetworkId, doorIndex, true);
+                    TriggerServerEvent("VehicleControl:Notes.Server:doorAction", vehicle.NetworkId, doorIndex, true);
                 }
 
                 Notify.Success("Door opened.");
@@ -158,7 +158,7 @@ namespace VehicleControl.Client
                 }
                 else
                 {
-                    TriggerServerEvent("VehicleControl:Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Trunk, false);
+                    TriggerServerEvent("VehicleControl:Notes.Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Trunk, false);
                 }
 
                 Notify.Success("Trunk closed.", true);
@@ -171,7 +171,7 @@ namespace VehicleControl.Client
                 }
                 else
                 {
-                    TriggerServerEvent("VehicleControl:Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Trunk, false);
+                    TriggerServerEvent("VehicleControl:Notes.Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Trunk, false);
                 }
 
                 Notify.Success("Trunk opened.", true);
@@ -214,7 +214,7 @@ namespace VehicleControl.Client
                 }
                 else
                 {
-                    TriggerServerEvent("VehicleControl:Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Hood, false);
+                    TriggerServerEvent("VehicleControl:Notes.Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Hood, false);
                 }
 
                 Notify.Success("Hood closed.");
@@ -227,7 +227,7 @@ namespace VehicleControl.Client
                 }
                 else
                 {
-                    TriggerServerEvent("VehicleControl:Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Hood, true);
+                    TriggerServerEvent("VehicleControl:Notes.Server:doorAction", vehicle.NetworkId, (int)VehicleDoorIndex.Hood, true);
                 }
 
                 Notify.Success("Hood opened.");
@@ -251,7 +251,7 @@ namespace VehicleControl.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("VehicleControl:Client:ShuffleSeats")]
+        [EventHandler("VehicleControl:Notes.Notes.Client:ShuffleSeats")]
         private void OnShuffleSeats()
         {
             Vehicle vehicle = ClientCurrentVehicle;
@@ -270,7 +270,7 @@ namespace VehicleControl.Client
             }
         }
 
-        [EventHandler("VehicleControl:Client:DoorAction")]
+        [EventHandler("VehicleControl:Notes.Notes.Client:DoorAction")]
         private void OnDoorAction(int networkId, int doorIndex, bool open)
         {
             Vehicle vehicle = (Vehicle)Entity.FromNetworkId(networkId);

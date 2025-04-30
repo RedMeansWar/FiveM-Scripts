@@ -6,7 +6,6 @@ using Common.Models;
 using Newtonsoft.Json;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
-using System.Linq;
 
 namespace Framework.Client
 {
@@ -30,7 +29,17 @@ namespace Framework.Client
             RegisterNUICallback("quitGame", QuitGame);
             RegisterNUICallback("disconnect", Disconnect);
 
-            TriggerServerEvent("Framework:Server:GetDiscordRoles");
+            TriggerServerEvent("Framework:Notes.Server:GetDiscordRoles");
+
+            if (!_ran)
+            {
+                TriggerEvent("chat:addTemplate", "TemplateGreen", "<div style='background-color: rgba(0, 153, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateGrey", "<div style='background-color: rgba(34, 34, 34, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateRed", "<div style='background-color: rgba(255, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+                TriggerEvent("chat:addTemplate", "TemplateBlue", "<div style='background-color: rgba(0, 128, 255, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
+
+                Log.InfoOrError("Successfully registered chat templates.", "FRAMEWORK");
+            }
         }
         #endregion
 
@@ -112,7 +121,7 @@ namespace Framework.Client
             Hud.SendFrameworkMessage($"You're now playing as {selectedCharacter.FirstName} {selectedCharacter.LastName} ({selectedCharacter.Department})");
 
             // trigger an event for selected character data (across scripts that require this framework to work)
-            TriggerEvent("Framework:Client:SelectedCharacter", Json.Stringify(_currentCharacter));
+            TriggerEvent("Framework:Notes.Notes.Client:SelectedCharacter", Json.Stringify(_currentCharacter));
 
             // return the result as a success
             result(new { success = true, message = "success" });
@@ -149,7 +158,7 @@ namespace Framework.Client
             Character createdCharacter = CreateCharacter(firstName, lastName, gender, department, dob, cash, bank, "0");
 
             // Trigger server event to handle server-sided character creation.
-            TriggerServerEvent("Framework:Server:CreateCharacter", Json.Stringify(createdCharacter));
+            TriggerServerEvent("Framework:Notes.Server:CreateCharacter", Json.Stringify(createdCharacter));
 
             // Display success modal to client and return success result
             SendNUIMessage(Json.Stringify(new
@@ -197,7 +206,7 @@ namespace Framework.Client
             };
 
             // Trigger server event to handle server-sided character edit.
-            TriggerServerEvent("Framework:Server:EditCharacter", Json.Stringify(editedCharacter));
+            TriggerServerEvent("Framework:Notes.Server:EditCharacter", Json.Stringify(editedCharacter));
 
             // Display success modal to client and return success result
             SendNUIMessage(Json.Stringify(new
@@ -217,7 +226,7 @@ namespace Framework.Client
             string characterId = data.GetVal<string>("characterId", null);
 
             // Trigger server event to handle server-sided character deletion.
-            TriggerServerEvent("Framework:Server:DeleteCharacter", long.Parse(characterId));
+            TriggerServerEvent("Framework:Notes.Server:DeleteCharacter", long.Parse(characterId));
 
             // Display success modal to client and return success result
             SendNUIMessage(Json.Stringify(new
@@ -256,7 +265,7 @@ namespace Framework.Client
         private void OpenFrameworkUi()
         {
             if (IsNuiFocused()) return;
-            TriggerServerEvent("Framework:Server:GetCharacters");
+            TriggerServerEvent("Framework:Notes.Server:GetCharacters");
         }
 
         /// <summary>
@@ -319,24 +328,17 @@ namespace Framework.Client
         {
             if (!_ran)
             {
-                TriggerServerEvent("Framework:Server:GetCharacters");
+                TriggerServerEvent("Framework:Notes.Server:GetCharacters");
 
                 Exports["spawnmanager"].spawnPlayer(true);
                 await Delay(3000);
                 Exports["spawnmanager"].setAutoSpawn(false);
 
-                TriggerEvent("chat:addTemplate", "TemplateGreen", "<div style='background-color: rgba(0, 153, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-                TriggerEvent("chat:addTemplate", "TemplateGrey", "<div style='background-color: rgba(34, 34, 34, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-                TriggerEvent("chat:addTemplate", "TemplateRed", "<div style='background-color: rgba(255, 0, 0, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-                TriggerEvent("chat:addTemplate", "TemplateBlue", "<div style='background-color: rgba(0, 128, 255, 0.4); padding-top: 10px; padding-bottom: 10px; border-radius: 10px; text-align: center;'>{1}</div");
-
-                Log.InfoOrError("Successfully registered chat templates.", "CHAT");
-
                 _ran = true;
             }
         }
 
-        [EventHandler("Framework:Client:GetCharacters")]
+        [EventHandler("Framework:Notes.Notes.Client:GetCharacters")]
         private void OnGetCharacters(dynamic characters)
         {
             List<Character> characterList = JsonConvert.DeserializeObject<List<Character>>(JsonConvert.SerializeObject(characters));
@@ -353,7 +355,7 @@ namespace Framework.Client
             }));
         }
 
-        [EventHandler("Framework:Client:ChangeAop")]
+        [EventHandler("Framework:Notes.Notes.Client:ChangeAop")]
         private void OnChangeAop(string newAop)
         {
             _currentAop = newAop;
@@ -364,7 +366,7 @@ namespace Framework.Client
             }));
         }
 
-        [EventHandler("Framework:Client:GetDiscordRoles")]
+        [EventHandler("Framework:Notes.Notes.Client:GetDiscordRoles")]
         private void OnGetDiscordRoles(dynamic rolesJson)
         {
             Dictionary<string, string> roles = JsonConvert.DeserializeObject<Dictionary<string, string>>(rolesJson);

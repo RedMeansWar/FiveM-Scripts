@@ -54,7 +54,7 @@ namespace Breathalyzer.Client
             TaskPlayAnim(ClientPed.Handle, "weapons@first_person@aim_rng@generic@projectile@shared@core", "idlerng_med", 1.0f, -1, 5000, 50, 0, false, false, false);
             await Delay(5000);
 
-            TriggerServerEvent("Breathalyzer:Server:SubmitBacTest", targetPlayer.ServerId);
+            TriggerServerEvent("Breathalyzer:Notes.Server:SubmitBacTest", targetPlayer.ServerId);
         }
 
 
@@ -106,7 +106,7 @@ namespace Breathalyzer.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("Breathalyzer:Client:OpenBacSetter")]
+        [EventHandler("Breathalyzer:Notes.Notes.Client:OpenBacSetter")]
         private async void OnOpenBacSetter(string[] args)
         {
             var bacInput = await Hud.GetUserInput("Set BAC Level (Legal Limit is 0.08)", 5);
@@ -127,10 +127,10 @@ namespace Breathalyzer.Client
             Notify.Success($"Your BAC level is now {_bac}.", true);
         }
 
-        [EventHandler("Breathalyzer:Client:SubmitTest")]
-        private void OnSubmitTest(string testerId) => TriggerServerEvent("Breathalyzer:Server:ReturnTest", testerId, _bac);
+        [EventHandler("Breathalyzer:Notes.Notes.Client:SubmitTest")]
+        private void OnSubmitTest(string testerId) => TriggerServerEvent("Breathalyzer:Notes.Server:ReturnTest", testerId, _bac);
 
-        [EventHandler("Breathalyzer:Client:ReturnLevel")]
+        [EventHandler("Breathalyzer:Notes.Notes.Client:ReturnLevel")]
         private async void OnReturnLevel(string bacLevel)
         {
             _bac = bacLevel;

@@ -19,7 +19,7 @@ files {
 
 client_script 'Framework.Client.net.dll'
 
-server_script {
+server_scripts {
 	'Framework.Server.net.dll',
 	'@oxmysql/lib/MySQL.lua',
 	'FrameworkHelper.lua'

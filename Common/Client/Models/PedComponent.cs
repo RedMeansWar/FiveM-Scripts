@@ -17,7 +17,7 @@ namespace Common.Client.Models
         Beard = PedComponents.Head,
 
         /// <summary>
-        /// Hair Style / Color
+        /// Hairstyle / Color
         /// </summary>
         Hair = PedComponents.Hair,
 

@@ -35,7 +35,7 @@ namespace Framework.Server
                 if (IsPlayerAceAllowed(player.Handle, "framework.ChangeAop"))
                 {
                     _currentAop = string.Join(" ", args);
-                    TriggerClientEvent("Framework:Client:ChangeAop", _currentAop);
+                    TriggerClientEvent("Framework:Notes.Notes.Client:ChangeAop", _currentAop);
                     TriggerClientEvent("chat:addMessage", new { templateId = "TemplateGrey", color = new[] { 255, 255, 255 }, multiline = true, args = new[] { "", $"Current AOP is now ^5^*{_currentAop}^r^7" } });
 
                     SetConvarServerInfo("AreaOfPatrol", _currentAop);
@@ -61,7 +61,7 @@ namespace Framework.Server
                 _currentAop = "Statewide";
                 SetConvarServerInfo("AreaOfPatrol", "Statewide");
 
-                TriggerClientEvent("Framework:Client:ChangeAop", _currentAop);
+                TriggerClientEvent("Framework:Notes.Notes.Client:ChangeAop", _currentAop);
                 TriggerClientEvent("chat:addMessage", new { templateId = "TemplateGrey", color = new[] { 255, 255, 255 }, multiline = true, args = new[] { "", "Current AOP is now set to Statewide" } });
             }
             else
@@ -79,7 +79,7 @@ namespace Framework.Server
                 if (IsPlayerAceAllowed(player.Handle, "framework.ChangeAop"))
                 {
                     _currentAop = string.Join(" ", args);
-                    TriggerClientEvent("Framework:Client:ChangeAop", _currentAop);
+                    TriggerClientEvent("Framework:Notes.Notes.Client:ChangeAop", _currentAop);
                     TriggerClientEvent("chat:addMessage", new { templateId = "TemplateGrey", color = new[] { 255, 255, 255 }, multiline = true, args = new[] { "", $"Current AOP is now ^5^*{_currentAop}^r^7" } });
 
                     SetConvarServerInfo("AreaOfPatrol", _currentAop);

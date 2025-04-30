@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common;
 using Common.Client;
-using SharpConfig;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
-namespace Client
+namespace Cuff.Client
 {
     public class Client : ClientCommonScript
     {
@@ -65,7 +61,7 @@ namespace Client
                 return;
             }
 
-            TriggerServerEvent("Cuff:Server:CuffClosestPlayer", closestPlayer.ServerId, isFront, isZiptie);
+            TriggerServerEvent("Cuff:Notes.Server:CuffClosestPlayer", closestPlayer.ServerId, isFront, isZiptie);
         }
 
         private async void CuffMeHandler(bool isFront = false, bool isZiptie = false)
@@ -75,7 +71,7 @@ namespace Client
 
             if (_isCuffed)
             {
-                if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "cuff", 0.2f);
+                if (!isZiptie && _usingCS) TriggerServerEvent("Notes.Server:SoundToRadius", ClientPed.NetworkId, 5f, "cuff", 0.2f);
 
                 ClientPed.Task.ClearAll();
                 ClientPed.Task.PlayAnimation(_isFrontCuffed ? "anim@move_m@prisoner_cuffed" : "mp_arresting", "idle", 8f, -1, AnimationFlags.StayInEndFrame | AnimationFlags.AllowRotation | AnimationFlags.UpperBodyOnly);
@@ -124,7 +120,7 @@ namespace Client
             }
             else
             {
-                if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "uncuff", 0.2f);
+                if (!isZiptie && _usingCS) TriggerServerEvent("Notes.Server:SoundToRadius", ClientPed.NetworkId, 5f, "uncuff", 0.2f);
 
                 ClientPed.Task.ClearAnimation("mp_arresting", "idle");
                 ClientPed.Task.ClearAnimation("anim@move_m@prisoner_cuffed", "idle");
@@ -151,11 +147,11 @@ namespace Client
 
         private async void PlayCuffAnimation(int cuffer, bool isZiptie)
         {
-            TriggerServerEvent("Cuff:Server:PlayAnimation", cuffer, !_isCuffed);
+            TriggerServerEvent("Cuff:Notes.Server:PlayAnimation", cuffer, !_isCuffed);
 
             if (_isCuffed)
             {
-                if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "cuff", 0.2f);
+                if (!isZiptie && _usingCS) TriggerServerEvent("Notes.Server:SoundToRadius", ClientPed.NetworkId, 5f, "cuff", 0.2f);
 
                 ClientPed.Task.ClearAll();
                 ClientPed.Task.PlayAnimation(_isFrontCuffed ? "anim@move_m@prisoner_cuffed" : "mp_arresting", "idle", 8f, -1, AnimationFlags.StayInEndFrame | AnimationFlags.AllowRotation | AnimationFlags.UpperBodyOnly);
@@ -187,7 +183,7 @@ namespace Client
             {
                 await Delay(3000);
 
-                if (!isZiptie && _usingCS) TriggerServerEvent("Server:SoundToRadius", ClientPed.NetworkId, 5f, "uncuff", 0.2f);
+                if (!isZiptie && _usingCS) TriggerServerEvent("Notes.Server:SoundToRadius", ClientPed.NetworkId, 5f, "uncuff", 0.2f);
 
                 ClientPed.Task.ClearAnimation("mp_arresting", "idle");
                 ClientPed.Task.ClearAnimation("anim@move_m@prisoner_cuffed", "idle");
@@ -203,10 +199,10 @@ namespace Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("Cuff:Client:PlayAnimation")]
+        [EventHandler("Cuff:Notes.Notes.Client:PlayAnimation")]
         private void OnPlayAnimation(bool uncuff) => ClientPed.Task.PlayAnimation(uncuff ? "mp_arresting" : "rcmpaparazzo_3", uncuff ? "a_uncuff" : "poppy_arrest_cop", 4f, 4f, 3000, AnimationFlags.UpperBodyOnly, 0.595f);
 
-        [EventHandler("Cuff:Client:GetCuffedPlayer")]
+        [EventHandler("Cuff:Notes.Notes.Client:GetCuffedPlayer")]
         private void OnGetCuffedPlayer(int cuffer, bool isFront, bool isZiptie)
         {
             _isCuffed = !_isCuffed;

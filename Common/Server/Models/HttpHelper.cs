@@ -101,7 +101,7 @@ namespace Common.Server.Models
             }
             else
             {
-                // Return a default RequestResponse with a 500 status code (Internal Server Error).
+                // Return a default RequestResponse with a 500 status code (Internal Notes.Server Error).
                 return new RequestResponse
                 {
                     status = HttpStatusCode.InternalServerError,   // Default to InternalServerError status.

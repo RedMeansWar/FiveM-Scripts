@@ -145,7 +145,7 @@ namespace NearestPostal.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("NearestPostal:Client:DisplayUi")]
+        [EventHandler("NearestPostal:Notes.Notes.Client:DisplayUi")]
         private void OnDisplayUi(bool visable) => _displayUi = visable;
         #endregion
     }

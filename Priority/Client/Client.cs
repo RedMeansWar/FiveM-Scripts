@@ -30,28 +30,28 @@ namespace Priority.Client
                 {
                     case "start":
                     case "s":
-                        TriggerEvent("Priority:Client:StartPriority");
+                        TriggerEvent("Priority:Notes.Notes.Client:StartPriority");
                         break;
 
                     case "end":
                     case "e":
                         double duration = args.Length == 2 && (args[1] == "10" || args[1] == "30") ? int.Parse(args[1]) : 10;
-                        TriggerEvent("Priority:Client:EndPriority", duration);
+                        TriggerEvent("Priority:Notes.Notes.Client:EndPriority", duration);
                         break;
 
                     case "hold":
                     case "h":
-                        TriggerEvent("Priority:Client:HoldPriority", args.Length == 2 ? int.Parse(args[1].ToString()) : 0);
+                        TriggerEvent("Priority:Notes.Notes.Client:HoldPriority", args.Length == 2 ? int.Parse(args[1].ToString()) : 0);
                         break;
 
                     case "transfer":
                     case "t":
-                        TriggerEvent("Priority:Client:TransferPriority");
+                        TriggerEvent("Priority:Notes.Notes.Client:TransferPriority");
                         break;
 
                     case "reset":
                     case "r":
-                        TriggerEvent("Priority:Client:ResetPriority");
+                        TriggerEvent("Priority:Notes.Notes.Client:ResetPriority");
                         break;
 
                     default:
@@ -77,13 +77,13 @@ namespace Priority.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("Framework:Client:SelectedCharacter")]
+        [EventHandler("Framework:Notes.Notes.Client:SelectedCharacter")]
         private void OnSelectCharacter(string json) => _currentCharacter = Json.Parse<Character>(json);
 
-        [EventHandler("Priority:Client:ToggleUi")]
+        [EventHandler("Priority:Notes.Notes.Client:ToggleUi")]
         private void OnToggleUi(bool displayed) => _displayUi = displayed;
 
-        [EventHandler("Priority:Client:UpdatePriorityStatus")]
+        [EventHandler("Priority:Notes.Notes.Client:UpdatePriorityStatus")]
         private void OnUpdatePriorityStatus(string priorityHolder, long? priorityTimerExpiresAt, long? priorityHoldExpiresAt, long? priorityForceEndAt)
         {
             _priorityHolder = priorityHolder;
@@ -92,7 +92,7 @@ namespace Priority.Client
             _priorityForceEndAt = priorityForceEndAt;
         }
 
-        [EventHandler("Priority:Client:StartPriority")]
+        [EventHandler("Priority:Notes.Notes.Client:StartPriority")]
         private void OnStartPriority()
         {
             if (_currentCharacter.Department is not "Civ")
@@ -101,10 +101,10 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Server:StartPriority");
+            TriggerServerEvent("Priority:Notes.Server:StartPriority");
         }
 
-        [EventHandler("Priority:Client:EndPriority")]
+        [EventHandler("Priority:Notes.Notes.Client:EndPriority")]
         private void OnEndPriority(int endDuration)
         {
             if (_currentCharacter.Department is not "Civ")
@@ -113,10 +113,10 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Server:EndPriority", endDuration);
+            TriggerServerEvent("Priority:Notes.Server:EndPriority", endDuration);
         }
 
-        [EventHandler("Priority:Client:TransferPriority")]
+        [EventHandler("Priority:Notes.Notes.Client:TransferPriority")]
         private void OnTransferPriority()
         {
             if (_currentCharacter.Department is not "Civ")
@@ -125,10 +125,10 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Server:TransferPriority");
+            TriggerServerEvent("Priority:Notes.Server:TransferPriority");
         }
 
-        [EventHandler("Priority:Client:holdPriority")]
+        [EventHandler("Priority:Notes.Notes.Client:holdPriority")]
         private void OnHoldPriority(int holdDuration)
         {
             if (_currentCharacter.Department is not "Civ")
@@ -137,11 +137,11 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Server:HoldPriority", holdDuration);
+            TriggerServerEvent("Priority:Notes.Server:HoldPriority", holdDuration);
         }
 
-        [EventHandler("Priority:Client:ResetPriority")]
-        private void OnResetPriority() => TriggerServerEvent("Priority:Server:ResetPriority");
+        [EventHandler("Priority:Notes.Notes.Client:ResetPriority")]
+        private void OnResetPriority() => TriggerServerEvent("Priority:Notes.Server:ResetPriority");
         #endregion
 
         #region Ticks

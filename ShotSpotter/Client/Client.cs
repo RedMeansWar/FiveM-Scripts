@@ -62,10 +62,10 @@ namespace ShotSpotter.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("Framework:Client:SelectedCharacter")]
+        [EventHandler("Framework:Notes.Notes.Client:SelectedCharacter")]
         private void OnSelectedCharacter(string json) => _currentCharacter = Json.Parse<Character>(json);
 
-        [EventHandler("ShotSpotter:Client:ShowNotification")]
+        [EventHandler("ShotSpotter:Notes.Notes.Client:ShowNotification")]
         private async void OnShowNotification(Vector3 playerPos, string postal, string zoneName, string caliber)
         {
             if (!_shotSpotterNotification || _currentCharacter is not null && _currentCharacter.Department == "Civ" || _currentCharacter is not null && _currentCharacter.Department == "LSFD")
@@ -99,7 +99,7 @@ namespace ShotSpotter.Client
             blip.Delete();
         }
 
-        [EventHandler("ShotSpotter:Client:ToggleSound")]
+        [EventHandler("ShotSpotter:Notes.Notes.Client:ToggleSound")]
         private void OnToggleSound(int type, bool state)
         {
             if (type == 0)
@@ -144,7 +144,7 @@ namespace ShotSpotter.Client
                 string zoneName = GetLabelText(GetNameOfZone(playerPos.X, playerPos.Y, playerPos.Z));
                 string caliber = ClientPed.Weapons.Current.Group == WeaponGroup.Pistol ? "Small" : "Large";
 
-                TriggerServerEvent("ShotSpotter:Server:ShowNotification");
+                TriggerServerEvent("ShotSpotter:Notes.Server:ShowNotification");
             }
         }
         #endregion

@@ -6,18 +6,18 @@ namespace Breathalyzer.Server
     public class Server : BaseScript
     {
         #region Event Handlers
-        [EventHandler("Breathalyzer:Server:SubmitTest")]
+        [EventHandler("Breathalyzer:Notes.Server:SubmitTest")]
         private void OnSubmitTest([FromSource] Player testerPlayer, int testedId)
         {
             Player testedPlayer = Players[testedId];
-            testedPlayer?.TriggerEvent("Breathalyzer:Client:SubmitTest", testedPlayer.Handle);
+            testedPlayer?.TriggerEvent("Breathalyzer:Notes.Notes.Client:SubmitTest", testedPlayer.Handle);
         }
 
-        [EventHandler("Breathalyzer:Server:ReturnTest")]
+        [EventHandler("Breathalyzer:Notes.Server:ReturnTest")]
         private void OnReturnTest(string testerId, string bacLevel)
         {
             Player testerPlayer = Players[int.Parse(testerId)];
-            testerPlayer?.TriggerEvent("Breathalyzer:Client:ReturnLevel");
+            testerPlayer?.TriggerEvent("Breathalyzer:Notes.Notes.Client:ReturnLevel");
         }
         #endregion
     }

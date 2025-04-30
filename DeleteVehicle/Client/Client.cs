@@ -33,7 +33,7 @@ namespace DeleteVehicle.Client
                 }
                 else
                 {
-                    TriggerServerEvent("DeleteVehicle:Server:DeleteVehicle", closestVehicle.NetworkId);
+                    TriggerServerEvent("DeleteVehicle:Notes.Server:DeleteVehicle", closestVehicle.NetworkId);
                     int tempTimer = Game.GameTime;
 
                     while (closestVehicle.Exists())

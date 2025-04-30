@@ -1,21 +1,20 @@
-﻿using System;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
 
 namespace DeleteVehicle.Server
 {
-    public class Server
+    public class Server : BaseScript
     {
         [EventHandler("DeleteVehicle:Server:DeleteVehicle")]
-        private void OnDeleteVehicle(int networkId)
+        private void OnDeleteVehicle(int netId)
         {
-            Entity vehicle = Entity.FromNetworkId(networkId);
+            Entity vehicle = Entity.FromNetworkId(netId);
             if (vehicle is null)
             {
                 return;
             }
-
-            DeleteEntity(networkId);
+            
+            DeleteEntity(netId);
         }
     }
 }

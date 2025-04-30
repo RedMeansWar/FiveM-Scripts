@@ -18,7 +18,7 @@ namespace SceneControl.Client
         #endregion
 
         #region Constructor
-        public Client() => TriggerServerEvent("SceneControl:Server:GetAllSpeedZones");
+        public Client() => TriggerServerEvent("SceneControl:Notes.Server:GetAllSpeedZones");
         #endregion
 
         #region Event Handlers
@@ -33,10 +33,10 @@ namespace SceneControl.Client
             }
         }
 
-        [EventHandler("SceneControl:Client:Notify")]
+        [EventHandler("SceneControl:Notes.Notes.Client:Notify")]
         private void OnNotify(string message) => Hud.DisplayNotification(message, true);
 
-        [EventHandler("SceneControl:Client:SpawnProp")]
+        [EventHandler("SceneControl:Notes.Notes.Client:SpawnProp")]
         private void OnSpawnProp(int propIndex)
         {
             if (ClientPed.IsSittingInVehicle())
@@ -60,10 +60,10 @@ namespace SceneControl.Client
             NetworkRegisterEntityAsNetworked(ObjToNet(spawnedProp.Handle));
             PlaceObjectOnGroundProperly(spawnedProp.Handle);
 
-            TriggerServerEvent("SceneControl:Server:Log", $"{ClientPlayer.Name} (#{ClientPlayer.ServerId}) spawned prop [{selectedProp.DisplayName}] at \n{playerPos}");
+            TriggerServerEvent("SceneControl:Notes.Server:Log", $"{ClientPlayer.Name} (#{ClientPlayer.ServerId}) spawned prop [{selectedProp.DisplayName}] at \n{playerPos}");
         }
 
-        [EventHandler("SceneControl:Client:DeleteClosestProp")]
+        [EventHandler("SceneControl:Notes.Notes.Client:DeleteClosestProp")]
         private async void OnDeleteClosestProp()
         {
             Vector3 playerPos = ClientPed.Position;
@@ -94,17 +94,17 @@ namespace SceneControl.Client
             }
         }
 
-        [EventHandler("SceneControl:Client:VisualProp")]
+        [EventHandler("SceneControl:Notes.Notes.Client:VisualProp")]
         private void OnVisualizeProp(int propIndex)
         {
             if (ClientPed.IsSittingInVehicle()) return;
             _visualizedSceneProp = SceneConstants.SceneProps[propIndex];
         }
 
-        [EventHandler("SceneControl:Client:ClearVisualizer")]
+        [EventHandler("SceneControl:Notes.Notes.Client:ClearVisualizer")]
         private void OnClearvisualizer() => _visualizedSceneProp = null;
 
-        [EventHandler("SceneControl:Client:UpdateSpeedZones")]
+        [EventHandler("SceneControl:Notes.Notes.Client:UpdateSpeedZones")]
         private void OnUpdateSpeedZones(string json)
         {
             Log.InfoOrError($"Recieved an SpeedZone update on {json}");

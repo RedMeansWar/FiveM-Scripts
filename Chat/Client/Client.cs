@@ -245,7 +245,7 @@ namespace Chat.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("Framework:Client:SelectedCharacter")]
+        [EventHandler("Framework:Notes.Notes.Client:SelectedCharacter")]
         private void OnSelectedCharacter(string json)
         {
             _currentCharacter = Json.Parse<Character>(json);
