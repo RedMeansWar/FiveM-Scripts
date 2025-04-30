@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using MenuAPI;
 using Common;
 using Common.Client;
@@ -25,14 +24,17 @@ namespace InteractionMenu.Client
             MenuController.MenuToggleKey = (Control)_controlKey;
             MenuController.AddMenu(menu);
             
-            MenuItem policeBtn = new("Police Toolbox") { Label = Constants.MenuArrowForward, Description = "Open the Police Toolbox menu." };
+            MenuItem policeBtn = new("Police Toolbox") { Label = Constants.MenuArrowForward, Description = "Open the police toolbox." };
             menu.AddMenuItem(policeBtn);
             MenuController.BindMenuItem(menu, PoliceToolbox.GetMenu(), policeBtn);
+            
+            MenuItem vehicleMenuBtn = new("Vehicle Menu") { Label = Constants.MenuArrowForward, Description = "Open the vehicle menu." };
+            menu.AddMenuItem(vehicleMenuBtn);
+            MenuController.BindMenuItem(menu, VehicleMenu.GetMenu(), vehicleMenuBtn);
             
             MenuItem settingsBtn = new("Settings") { Label = Constants.MenuArrowForward, Description = "Open the settings menu." };
             menu.AddMenuItem(settingsBtn);
             MenuController.BindMenuItem(menu, SettingsMenu.GetMenu(), settingsBtn);
-            
             
             menu.AddMenuItem(new(Constants.MenuClose));
             menu.OnItemSelect += Menu_OnItemSelect;
@@ -45,8 +47,8 @@ namespace InteractionMenu.Client
             string data = LoadResourceFile(GetCurrentResourceName(), "config.ini");
 
             _controlKey = Config.GetValue(data, "Menu", "OpenMenuKey", 244);
-            MenuTitle = Config.GetValue(data, "Menu", "OpenMenuKey","RMenu");
-            if (!Config.KeyExists(data, "Menu", "OpenMenuKey") || !Config.KeyExists(data, "Menu", "OpenMenuKey"))
+            MenuTitle = Config.GetValue(data, "Menu", "MenuTitle","RMenu");
+            if (!Config.KeyExists(data, "Menu", "OpenMenuKey") || !Config.KeyExists(data, "Menu", "MenuTitle"))
             {
                 Log.InfoOrError("ERROR: 'config.ini' not configured properly or is missing. Please check if the config is there or has any data inside of it.", "INTERACTION MENU");
             }

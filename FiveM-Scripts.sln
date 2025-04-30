@@ -105,6 +105,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InteractionMenu", "Interact
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteractionMenu.Client", "InteractionMenu\Client\InteractionMenu.Client.csproj", "{1B833DF7-A63B-4B09-BE32-9CE21A4B601C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Animations", "Animations", "{791754C1-82EC-464E-908C-44B0757372F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Animations.Client", "Animations\Client\Animations.Client.csproj", "{64F12FB9-6BCA-4111-9BC7-2C4C14F61D3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -231,6 +235,10 @@ Global
 		{1B833DF7-A63B-4B09-BE32-9CE21A4B601C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B833DF7-A63B-4B09-BE32-9CE21A4B601C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B833DF7-A63B-4B09-BE32-9CE21A4B601C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64F12FB9-6BCA-4111-9BC7-2C4C14F61D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64F12FB9-6BCA-4111-9BC7-2C4C14F61D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64F12FB9-6BCA-4111-9BC7-2C4C14F61D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64F12FB9-6BCA-4111-9BC7-2C4C14F61D3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -267,6 +275,7 @@ Global
 		{835F9B82-DA6C-4991-9154-FED0E8276E7B} = {088334A9-3E27-47B7-BB3A-AFC7D9CDC2D9}
 		{4F5B1F06-C4E4-435D-8BA3-F766847A217B} = {088334A9-3E27-47B7-BB3A-AFC7D9CDC2D9}
 		{1B833DF7-A63B-4B09-BE32-9CE21A4B601C} = {6CB707D1-1E4D-40CC-B54A-97DC30B66828}
+		{64F12FB9-6BCA-4111-9BC7-2C4C14F61D3D} = {791754C1-82EC-464E-908C-44B0757372F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B63DCC9-26D3-4E2A-9513-417346177C62}

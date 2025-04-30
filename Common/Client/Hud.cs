@@ -25,12 +25,12 @@ namespace Common.Client
         /// <summary>
         /// Determines if the HUD is visable.
         /// </summary>
-        public static bool IsHudVisible => Screen.Hud.IsVisible;
+        public static bool IsHudVisible { get; set; } = Screen.Hud.IsVisible;
 
         /// <summary>
         /// Determines if the Radar is visable.
         /// </summary>
-        public static bool IsRadarVisible => Screen.Hud.IsRadarVisible;
+        public static bool IsRadarVisible { get; set; } = Screen.Hud.IsRadarVisible;
         #endregion
 
         #region HUD Display
