@@ -30,6 +30,7 @@ namespace Framework.Client
             RegisterNUICallback("disconnect", Disconnect);
 
             TriggerServerEvent("Framework:Notes.Server:GetDiscordRoles");
+            StartAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE");
 
             if (!_ran)
             {

@@ -52,7 +52,6 @@ namespace Suppressor.Client
         public Client()
         {
             for (int i = 0; i < 16; i++) EnableDispatchService(i, false);
-            
             uint player = Game.GenerateHashASCII("PLAYER");
 
             _scenarioTypes.ForEach(s => SetScenarioTypeEnabled(s, false));
@@ -61,6 +60,8 @@ namespace Suppressor.Client
             _suppressedModels.ForEach(s => SetVehicleModelIsSuppressed(Game.GenerateHashASCII(s), true));
 
             SetAudioFlag("PoliceScannerDisabled", true);
+            SetRandomBoats(false);
+            SetRandomTrains(false);
         }
         #endregion
 

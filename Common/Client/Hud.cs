@@ -6,6 +6,7 @@ using CitizenFX.Core.Native;
 using CitizenFX.Core.UI;
 using Common.Client.Models;
 using static CitizenFX.Core.Native.API;
+using Button = Common.Client.Models.Button;
 
 namespace Common.Client
 {
@@ -451,7 +452,7 @@ namespace Common.Client
         public static dynamic GetSafeZone()
         {
             // Calculate the safezone size based on an internal safezone value.
-            float size = 10 - ((float)Math.Round(GetSafeZone(), 2) * 100) - 90;
+            float size = 10 - (float)Math.Round(GetSafeZone(), 2) * 100 - 90;
 
             // Initialize the safezone with base coordinates based on aspect ratio.
             dynamic safeZone = new
@@ -493,13 +494,10 @@ namespace Common.Client
                 // Return the control name in a formatted string
                 return $"~{(InputAction)controlId}~";
             }
-            else
-            {
-                // Return a formatted string indicating the input is unknown
-                return $"~r~UNKNOWN_INPUT~w~";
-            }
-        }
 
+            // Return a formatted string indicating the input is unknown
+            return $"~r~UNKNOWN_INPUT~w~";
+        }
 
         /// <summary>
         /// Retrieves the context string for a specified control ID.
@@ -510,6 +508,28 @@ namespace Common.Client
         /// otherwise, a string indicating an unknown input.
         /// </returns>
         public static string GetControlContext(InputAction action) => GetControlContext((int)action);
+
+        /// <summary>
+        /// Retrieves the context string for a specified control.
+        /// </summary>
+        /// <param name="control">The control to get the context for.</param>
+        /// <returns>
+        /// A formatted string representing the control's context if the control ID is valid; 
+        /// otherwise, a string indicating an unknown input.
+        /// </returns>
+        public static string GetControlContext(Control control) => GetControlContext((int)control);
+        
+        /// <summary>
+        /// Retrieves the context string for a specified key.
+        /// </summary>
+        /// <param name="key">The key to get the context for.</param>
+        /// <returns>
+        /// A formatted string representing the control's context if the control ID is valid; 
+        /// otherwise, a string indicating an unknown input.
+        /// </returns>
+        public static string GetControlContext(Key key) => GetControlContext((int)key);
+        
+        public static string GetControlContext(Button button) => GetControlContext((int)button);
         #endregion
 
         #region Chat
