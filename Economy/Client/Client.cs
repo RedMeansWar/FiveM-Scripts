@@ -79,6 +79,31 @@ namespace Economy.Client
         #region Event Handlers
         [EventHandler("Framework:Client:SelectedCharacter")]
         private void OnSelectedCharacter(string json) => _currentCharacter = Json.Parse<Character>(json);
+
+        [EventHandler("Economy:Client:RequestBalance")]
+        private void OnRequestBalance(int cashBalance, int bankBalance)
+        {
+        }
+
+        [EventHandler("Economy:Client:ProcessTransaction")]
+        private void OnProcessTransaction()
+        {
+            
+        }
+
+        [EventHandler("Economy:Client:CreateAccount")]
+        private void OnCreateAccount(Character character)
+        {
+            
+        }
+
+        [EventHandler("Economy:Client:PeekHud")]
+        private async void OnPeekHud()
+        {
+            SendNUIMessage(Json.Stringify(new { type = "ECONOMY_PEEK_HUD" }));
+            await Delay(0);
+            SendNUIMessage(Json.Stringify(new { type = "ECONOMY_CLOSE_NUI" }));
+        }
         #endregion
         
         #region Ticks

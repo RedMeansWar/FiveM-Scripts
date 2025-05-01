@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Common.Models
 {
@@ -12,5 +13,7 @@ namespace Common.Models
         public int Cash {  get; set; }
         public int Bank { get; set; }
         public string Department { get; set; }
+        public List<BankAccount> BankAccounts { get; set; }
+        
     }
 }
