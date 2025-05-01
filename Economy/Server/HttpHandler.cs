@@ -14,7 +14,7 @@ namespace Economy.Server
         internal string _jwt = "";
         internal Character _character;
         internal static string _apiKey = GetConvar("api_key", "");
-        internal static string _apiUrl = GetConvar("api_url", "http://localhost:5000/");
+        internal static string _apiUrl = GetConvar("api_url", "http://localhost:5000");
 
         internal Dictionary<string, string> _headers = new()
         {
@@ -33,7 +33,7 @@ namespace Economy.Server
                 password = password
             });
 
-            var response = await HttpHelper.PostAsync("http://localhost:3000/auth/login", data, _headers);
+            var response = await HttpHelper.PostAsync($"{_apiUrl}/auth/login", data, _headers);
             if (response?.IsSuccessStatusCode == true)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -48,11 +48,18 @@ namespace Economy.Server
                 return false;
             }
         }
-
-
-        public async Task<List<BankAccount>> GetBankAccountsByCharIdAsync(int characterId)
+        
+        public async Task<BankAccount> GetBankAccountByCharacterIdAsync(int characterId, string accountType)
         {
-            return _character.BankAccounts;
+            var response = await HttpHelper.GetAsync($"{_apiUrl}/economy/{characterId}/{accountType}");
+            if (response is null || !response.IsSuccessStatusCode)
+            {
+                Log.InfoOrError($"Failed to fetch bank account from API for Character ID: {characterId}.", "API");
+                return null;
+            }
+            
+            string json = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<BankAccount>(json);
         }
         #endregion
     }
