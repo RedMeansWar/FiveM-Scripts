@@ -17,7 +17,9 @@ namespace Economy.Client
             _dailySalary = 500, // $500
             _giveDuration = 30, // 30 minutes
             _emergencySalary = 100; // $100
-            
+
+        // these booleans are config variables
+        internal bool _usingApi = false;
         internal Prop _closestAtmProp;
         internal Character _currentCharacter;
 
@@ -32,6 +34,7 @@ namespace Economy.Client
         {
             ReadConfigFile();
             
+            RegisterNUICallback("createAccount", CreateAccount);
             RegisterNUICallback("closeAtmNui", CloseAtmNui);
         }
         #endregion
@@ -51,6 +54,11 @@ namespace Economy.Client
             Audio.ReleaseSound(soundId);
             result(new { success = true, message = "success" });
         }
+
+        private void CreateAccount(IDictionary<string, object> data, CallbackDelegate result)
+        {
+            string name = data.GetVal<string>("name", null);
+        }
         #endregion
         
         #region Methods
@@ -62,11 +70,16 @@ namespace Economy.Client
             _dailySalary = Config.GetValue(data, "Economy", "DailyWelfareAmount", 500);
             _emergencySalary = Config.GetValue(data, "Economy", "EmergencyServicesSalary", 100);
             _giveDuration = Config.GetValue(data, "Economy", "GiveEvery", 30);
+            _usingApi = Config.GetValue(data, "Economy", "UsingApi", false);
+
+            List<string> econKeyNames = 
+            ["InteractionKey", "DailyWelfareAmount", "EmergencyServicesSalary", "GiveEvery", "UsingApi"];
             
-            if (!Config.KeyExists(data, "Economy", "InteractionKey"))
+            econKeyNames.ForEach(k =>
             {
-                Log.InfoOrError("ERROR: 'config.ini' not properly configured or is missing. Please check if the config is there or has any data inside of it.", "ECONOMY");
-            }
+                if (!Config.KeyExists(data, "Economy", k))
+                    Log.InfoOrError("ERROR: 'config.ini' not properly configured or is missing. Please check if the config is there or has any data inside of it.", "ECONOMY");
+            });
         }
 
         private bool IsEmergencyService()
