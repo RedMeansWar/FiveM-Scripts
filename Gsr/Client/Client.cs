@@ -3,54 +3,93 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using Common.Client;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
-using Common;
 
 namespace Gsr.Client
 {
     public class Client : ClientCommonScript
     {
         #region Variables
-        internal bool _gsrFound;
-        internal string _weaponType;
+        internal int _lastShot;
+        internal bool _shotRecently;
+        
+        internal readonly List<WeaponHash> _whitelistedWeapons =
+        [
+            WeaponHash.FireExtinguisher, WeaponHash.Snowball, WeaponHash.PetrolCan, WeaponHash.Ball, WeaponHash.StunGun,
+            WeaponHash.Molotov, WeaponHash.Flare
+        ];
         #endregion
-
-        #region Constructor
-        public Client() => Weapons.LoadWeaponData();
-        #endregion
-
+        
         #region Commands
-        [Command("checkgsr")]
-        private void CheckGsrCommand()
+        [Command("cleangsr")]
+        private void CleanGsrCommand()
         {
-            uint currentWeaponHash = (uint)GetSelectedPedWeapon(ClientPed.Handle);
-            string displayName = Weapons.GetWeaponDisplayNameFromHash(currentWeaponHash);
+            if (!_shotRecently)
+            {
+                Notify.Alert("You haven't shot recently.");
+                return;
+            }
 
-            Log.InfoOrError($"Current Weapon: {displayName}");
+            Notify.Alert("You've wiped your hands of blood.", true);
+        }
+        
+        [Command("wipegsr")]
+        private void WipeGsrCommand() => CleanGsrCommand();
+
+        [Command("gsrtest")]
+        private void GsrTestCommand()
+        {
+            Player closestPlayer = GetClosestPlayer();
+            if (closestPlayer is null)
+            {
+                Notify.Alert("You must be closesr to the player you wish to test.", true);
+                return;
+            }
+            
+            TriggerServerEvent("Gsr:Server:SubmitTest", closestPlayer.ServerId);
         }
         #endregion
 
         #region Methods
+        private void CleanGsr()
+        {
+            ClientPed.ClearBloodDamage();
+            ClearPedEnvDirt(ClientPed.Handle);
+            ClientPed.ResetVisibleDamage();
+            _shotRecently = false;
+        }
+        #endregion
         
+        #region Event Handlers
+        [EventHandler("Gsr:Client:PerformTest")]
+        private void OnPerformTest(string testerId) => TriggerServerEvent("Gsr:Server:ReturnTest", _lastShot, testerId);
+
+        [EventHandler("Gsr:Client:Notify")]
+        private void OnNotify(bool shotRecently) => Hud.DisplayNotification(shotRecently ? "Sample from swab comes back ~g~~h~positive~h~~s~." : "Sample from swab comes back ~o~~h~negative~h~~s~.");
         #endregion
 
-        #region Event Handlers
-        [EventHandler("Gsr:Notes.Notes.Client:PerformTest")]
-        private void OnDoTest(bool gsrFound)
+        #region Ticks
+        [Tick]
+        private async Task GsrTick()
         {
-
-        }
-
-        [EventHandler("Gsr:Notes.Notes.Client:ReturnTest")]
-        private void OnReturnTest(bool gsrFound)
-        {
-            _gsrFound = gsrFound;
-
-            if (gsrFound)
+            if (ClientPed.IsShooting && !_whitelistedWeapons.Contains(ClientPed.Weapons.Current.Hash))
             {
-                Notify.Alert("You have found gun shot residue for a {}");
+                _lastShot = Game.GameTime;
+                _shotRecently = true;
+            }
+
+            if (_shotRecently && Game.GameTime - _lastShot > 900000) // 15 minutes
+            {
+                _shotRecently = false;
+            }
+
+            if (ClientPed.IsInWater && _shotRecently)
+            {
+                CleanGsr();
+                Notify.Alert("You've ~b~~h~washed off~h~~s~ the evidence of gunshot residue on yourself.", true);
             }
         }
         #endregion

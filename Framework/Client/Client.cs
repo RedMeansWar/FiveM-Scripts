@@ -12,7 +12,7 @@ namespace Framework.Client
     public class Client : ClientCommonScript
     {
         #region Variables
-        internal bool _ran;
+        internal bool _ran, _usingApi;
         internal string _currentAop = "Statewide";
         internal ISet<string> _allowedDepts = new HashSet<string>();
         public static Character _currentCharacter;
@@ -29,7 +29,7 @@ namespace Framework.Client
             RegisterNUICallback("quitGame", QuitGame);
             RegisterNUICallback("disconnect", Disconnect);
 
-            TriggerServerEvent("Framework:Notes.Server:GetDiscordRoles");
+            TriggerServerEvent("Framework:Server:GetDiscordRoles");
             StartAudioScene("CHARACTER_CHANGE_IN_SKY_SCENE");
 
             if (!_ran)
@@ -122,7 +122,7 @@ namespace Framework.Client
             Hud.SendFrameworkMessage($"You're now playing as {selectedCharacter.FirstName} {selectedCharacter.LastName} ({selectedCharacter.Department})");
 
             // trigger an event for selected character data (across scripts that require this framework to work)
-            TriggerEvent("Framework:Notes.Notes.Client:SelectedCharacter", Json.Stringify(_currentCharacter));
+            TriggerEvent("Framework:Client:SelectedCharacter", Json.Stringify(_currentCharacter));
 
             // return the result as a success
             result(new { success = true, message = "success" });
@@ -159,7 +159,7 @@ namespace Framework.Client
             Character createdCharacter = CreateCharacter(firstName, lastName, gender, department, dob, cash, bank, "0");
 
             // Trigger server event to handle server-sided character creation.
-            TriggerServerEvent("Framework:Notes.Server:CreateCharacter", Json.Stringify(createdCharacter));
+            TriggerServerEvent("Framework:Server:CreateCharacter", Json.Stringify(createdCharacter));
 
             // Display success modal to client and return success result
             SendNUIMessage(Json.Stringify(new
@@ -207,7 +207,7 @@ namespace Framework.Client
             };
 
             // Trigger server event to handle server-sided character edit.
-            TriggerServerEvent("Framework:Notes.Server:EditCharacter", Json.Stringify(editedCharacter));
+            TriggerServerEvent("Framework:Server:EditCharacter", Json.Stringify(editedCharacter));
 
             // Display success modal to client and return success result
             SendNUIMessage(Json.Stringify(new
@@ -227,7 +227,7 @@ namespace Framework.Client
             string characterId = data.GetVal<string>("characterId", null);
 
             // Trigger server event to handle server-sided character deletion.
-            TriggerServerEvent("Framework:Notes.Server:DeleteCharacter", long.Parse(characterId));
+            TriggerServerEvent("Framework:Server:DeleteCharacter", long.Parse(characterId));
 
             // Display success modal to client and return success result
             SendNUIMessage(Json.Stringify(new
@@ -266,7 +266,7 @@ namespace Framework.Client
         private void OpenFrameworkUi()
         {
             if (IsNuiFocused()) return;
-            TriggerServerEvent("Framework:Notes.Server:GetCharacters");
+            TriggerServerEvent("Framework:Server:GetCharacters");
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace Framework.Client
         {
             if (!_ran)
             {
-                TriggerServerEvent("Framework:Notes.Server:GetCharacters");
+                TriggerServerEvent("Framework:Server:GetCharacters");
 
                 Exports["spawnmanager"].spawnPlayer(true);
                 await Delay(3000);
@@ -339,7 +339,7 @@ namespace Framework.Client
             }
         }
 
-        [EventHandler("Framework:Notes.Notes.Client:GetCharacters")]
+        [EventHandler("Framework:Client:GetCharacters")]
         private void OnGetCharacters(dynamic characters)
         {
             List<Character> characterList = JsonConvert.DeserializeObject<List<Character>>(JsonConvert.SerializeObject(characters));
@@ -356,7 +356,7 @@ namespace Framework.Client
             }));
         }
 
-        [EventHandler("Framework:Notes.Notes.Client:ChangeAop")]
+        [EventHandler("Framework:Client:ChangeAop")]
         private void OnChangeAop(string newAop)
         {
             _currentAop = newAop;
@@ -367,7 +367,7 @@ namespace Framework.Client
             }));
         }
 
-        [EventHandler("Framework:Notes.Notes.Client:GetDiscordRoles")]
+        [EventHandler("Framework:Client:GetDiscordRoles")]
         private void OnGetDiscordRoles(dynamic rolesJson)
         {
             Dictionary<string, string> roles = JsonConvert.DeserializeObject<Dictionary<string, string>>(rolesJson);
@@ -389,6 +389,9 @@ namespace Framework.Client
             if (roles.ContainsValue("LSFD")) AddDeptIfNotExists("LSFD");
             if (roles.ContainsValue("Civilian Operations")) AddDeptIfNotExists("CIV");
         }
+        
+        [EventHandler("Framework:Client:UseApi")]
+        private void OnUseApi(bool usingApi) => usingApi = _usingApi;
         #endregion
     }
 }

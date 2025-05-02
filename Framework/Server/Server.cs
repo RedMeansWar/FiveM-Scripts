@@ -9,6 +9,7 @@ namespace Framework.Server
         #region Variables
         internal string _aopSetter = "SYSTEM";
         internal string _currentAop = "Statewide";
+        public static bool _usingApi = false;
         #endregion
 
         #region Constructor
@@ -97,6 +98,9 @@ namespace Framework.Server
         #region Event Handlers
         [EventHandler("Framework:DropUser")]
         private void OnDropUser([FromSource] Player player) => player.Drop("Dropped via framework.");
+        
+        [EventHandler("Framework:User:Api")]
+        private void OnUseApi(bool usingApi) => _usingApi = usingApi;
         #endregion
     }
 }

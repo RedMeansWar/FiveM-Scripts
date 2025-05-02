@@ -33,10 +33,10 @@ namespace SceneControl.Client
             }
         }
 
-        [EventHandler("SceneControl:Notes.Notes.Client:Notify")]
+        [EventHandler("SceneControl:Client:Notify")]
         private void OnNotify(string message) => Hud.DisplayNotification(message, true);
 
-        [EventHandler("SceneControl:Notes.Notes.Client:SpawnProp")]
+        [EventHandler("SceneControl:Client:SpawnProp")]
         private void OnSpawnProp(int propIndex)
         {
             if (ClientPed.IsSittingInVehicle())
@@ -63,7 +63,7 @@ namespace SceneControl.Client
             TriggerServerEvent("SceneControl:Notes.Server:Log", $"{ClientPlayer.Name} (#{ClientPlayer.ServerId}) spawned prop [{selectedProp.DisplayName}] at \n{playerPos}");
         }
 
-        [EventHandler("SceneControl:Notes.Notes.Client:DeleteClosestProp")]
+        [EventHandler("SceneControl:Client:DeleteClosestProp")]
         private async void OnDeleteClosestProp()
         {
             Vector3 playerPos = ClientPed.Position;
@@ -94,17 +94,17 @@ namespace SceneControl.Client
             }
         }
 
-        [EventHandler("SceneControl:Notes.Notes.Client:VisualProp")]
+        [EventHandler("SceneControl:Client:VisualProp")]
         private void OnVisualizeProp(int propIndex)
         {
             if (ClientPed.IsSittingInVehicle()) return;
             _visualizedSceneProp = SceneConstants.SceneProps[propIndex];
         }
 
-        [EventHandler("SceneControl:Notes.Notes.Client:ClearVisualizer")]
+        [EventHandler("SceneControl:Client:ClearVisualizer")]
         private void OnClearvisualizer() => _visualizedSceneProp = null;
 
-        [EventHandler("SceneControl:Notes.Notes.Client:UpdateSpeedZones")]
+        [EventHandler("SceneControl:Client:UpdateSpeedZones")]
         private void OnUpdateSpeedZones(string json)
         {
             Log.InfoOrError($"Recieved an SpeedZone update on {json}");

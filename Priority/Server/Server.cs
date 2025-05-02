@@ -21,11 +21,11 @@ namespace Priority.Server
         {
             if (player is null)
             {
-                TriggerClientEvent("Priority:Notes.Notes.Client:UpdatePriorityStatus", _priorityHolder, _priorityTimerExpiresAt, _priorityHoldExpiresAt, _priorityForceEndAt);
+                TriggerClientEvent("Priority:Client:UpdatePriorityStatus", _priorityHolder, _priorityTimerExpiresAt, _priorityHoldExpiresAt, _priorityForceEndAt);
             }
             else
             {
-                player.TriggerEvent("Priority:Notes.Notes.Client:UpdatePriorityStatus", _priorityHolder, _priorityTimerExpiresAt, _priorityHoldExpiresAt, _priorityForceEndAt);
+                player.TriggerEvent("Priority:Client:UpdatePriorityStatus", _priorityHolder, _priorityTimerExpiresAt, _priorityHoldExpiresAt, _priorityForceEndAt);
             }
         }
         #endregion
@@ -51,7 +51,7 @@ namespace Priority.Server
             }
         }
 
-        [EventHandler("Priority:Notes.Server:StartPriority")]
+        [EventHandler("Priority:Server:StartPriority")]
         private void OnStartPriority([FromSource] Player player)
         {
             if (_priorityHolder is not null)
@@ -77,7 +77,7 @@ namespace Priority.Server
             }
         }
 
-        [EventHandler("Priority:Notes.Server:EndPriority")]
+        [EventHandler("Priority:Server:EndPriority")]
         private void OnEndPriority([FromSource] Player player, double endDuration = 10)
         {
             if (_priorityHolder is null)
@@ -98,7 +98,7 @@ namespace Priority.Server
             }
         }
 
-        [EventHandler("Priority:Notes.Server:TransferPriority")]
+        [EventHandler("Priority:Server:TransferPriority")]
         private void OnTransferPrioriity([FromSource] Player player)
         {
             if (_priorityHolder is null)
@@ -121,7 +121,7 @@ namespace Priority.Server
             }
         }
 
-        [EventHandler("Priority:Notes.Server:HoldPriority")]
+        [EventHandler("Priority:Server:HoldPriority")]
         private void OnHoldPriority([FromSource] Player player, double holdDuration = 0)
         {
             if (!IsPlayerAceAllowed(player.Handle, "priority.HoldPriority"))
@@ -152,7 +152,7 @@ namespace Priority.Server
             UpdatePriorityState();
         }
 
-        [EventHandler("Priority:Notes.Server:resetPriority")]
+        [EventHandler("Priority:Server:resetPriority")]
         private void OnResetPriority([FromSource] Player player)
         {
             if (!IsPlayerAceAllowed(player.Handle, "priority.ResetPriority"))

@@ -62,10 +62,10 @@ namespace ShotSpotter.Client
         #endregion
 
         #region Event Handlers
-        [EventHandler("Framework:Notes.Notes.Client:SelectedCharacter")]
+        [EventHandler("Framework:Client:SelectedCharacter")]
         private void OnSelectedCharacter(string json) => _currentCharacter = Json.Parse<Character>(json);
 
-        [EventHandler("ShotSpotter:Notes.Notes.Client:ShowNotification")]
+        [EventHandler("ShotSpotter:Client:ShowNotification")]
         private async void OnShowNotification(Vector3 playerPos, string postal, string zoneName, string caliber)
         {
             if (!_shotSpotterNotification || _currentCharacter is not null && _currentCharacter.Department == "Civ" || _currentCharacter is not null && _currentCharacter.Department == "LSFD")
@@ -99,7 +99,7 @@ namespace ShotSpotter.Client
             blip.Delete();
         }
 
-        [EventHandler("ShotSpotter:Notes.Notes.Client:ToggleSound")]
+        [EventHandler("ShotSpotter:Client:ToggleSound")]
         private void OnToggleSound(int type, bool state)
         {
             if (type == 0)

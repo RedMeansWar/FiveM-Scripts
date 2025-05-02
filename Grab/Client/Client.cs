@@ -30,12 +30,12 @@ namespace Grab.Client
             }
 
             _grabbedPlayer = closestPlayer;
-            TriggerServerEvent("Grab:Notes.Server:GrabClosestPlayer", closestPlayer.ServerId);
+            TriggerServerEvent("Grab:Server:GrabClosestPlayer", closestPlayer.ServerId);
         }
         #endregion
 
         #region Event Handlers
-        [EventHandler("Grab:Notes.Notes.Client:GetGrabbedPlayer")]
+        [EventHandler("Grab:Client:GetGrabbedPlayer")]
         private void OnGetGrabbedPlayer(string sender)
         {
             _grabbed = !_grabbed;
@@ -62,7 +62,7 @@ namespace Grab.Client
             }
         }
 
-        [EventHandler("Grab:Notes.Notes.Client:Notify")]
+        [EventHandler("Grab:Client:Notify")]
         private void OnNotify(string message) => Hud.DisplayNotification(message, true);
         #endregion
 
@@ -82,13 +82,13 @@ namespace Grab.Client
                 escapeAttempts++;
                 if (escapeAttempts == 1)
                 {
-                    TriggerServerEvent("Grab:Notes.Server:Notify", _grabbedPlayer.ServerId, "The person you're grabbing is attempting to wiggle out from your grip!");
+                    TriggerServerEvent("Grab:Server:Notify", _grabbedPlayer.ServerId, "The person you're grabbing is attempting to wiggle out from your grip!");
                 }
 
                 int random = _random.Next(100);
                 if (random < escapeAttempts)
                 {
-                    TriggerServerEvent("Grab:Notes.Server:Notify", _grabbedPlayer.ServerId, "They've wiggled out from your grip!");
+                    TriggerServerEvent("Grab:Server:Notify", _grabbedPlayer.ServerId, "They've wiggled out from your grip!");
                     ClientPed.Detach();
 
                     escapeAttempts = 0;

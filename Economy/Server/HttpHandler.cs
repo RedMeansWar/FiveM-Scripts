@@ -124,7 +124,6 @@ namespace Economy.Server
             
             Log.InfoOrError($"Failed to add money to account {accountId} using API due to a invalid data or a bad response code. {response.StatusCode}");
             return false;
-
         }
 
         public static async Task<bool> RemoveMoneyAsync(int accountId, string accountType, int amount)

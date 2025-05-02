@@ -27,7 +27,7 @@ namespace SceneControl.Server
             Log.InfoOrError($"Cleared all speed zones.", "SCENE CONTROL");
 
             _speedzones.Clear();
-            TriggerClientEvent("SceneControl:Notes.Notes.Client:UpdateSpeedZones", Json.Stringify(_speedzones));
+            TriggerClientEvent("SceneControl:Client:UpdateSpeedZones", Json.Stringify(_speedzones));
 
             player.TriggerEvent("chat:addMessage", new { color = new[] { 0, 255, 0 }, args = new[] { "SYSTEM", "Cleared all speed zones." } });
         }
@@ -46,20 +46,20 @@ namespace SceneControl.Server
                 Log.InfoOrError($"{player.Name} disconnected, deleting their speed zones at \n{playerZone.Position}", "SCENE CONTROL");
 
                 _speedzones.Remove(playerZone);
-                TriggerClientEvent("SceneControl:Notes.Notes.Client:UpdateSpeedZones", Json.Stringify(_speedzones));
+                TriggerClientEvent("SceneControl:Client:UpdateSpeedZones", Json.Stringify(_speedzones));
             }
         }
 
-        [EventHandler("SceneControl:Notes.Server:GetAllSpeedZones")]
+        [EventHandler("SceneControl:Server:GetAllSpeedZones")]
         private void OnGetAllSpeedZones([FromSource] Player player)
         {
             if (_speedzones.Count > 0)
             {
-                player.TriggerEvent("SceneControl:Notes.Notes.Client:UpdateSpeedZones", Json.Stringify(_speedzones));
+                player.TriggerEvent("SceneControl:Client:UpdateSpeedZones", Json.Stringify(_speedzones));
             }
         }
 
-        [EventHandler("SceneControl:Notes.Server:CreateSpeedZone")]
+        [EventHandler("SceneControl:Server:CreateSpeedZone")]
         private void OnCreateSpeedZone([FromSource] Player player, Vector3 zonePosition, int zoneRadius, float zoneSpeed)
         {
             Log.InfoOrError($"{player.Name} created a speed zone at {zonePosition} with radius {zoneRadius}m and a speed {zoneSpeed.ToString("0.##")}mph.", "SCENE CONTROL");
@@ -68,21 +68,21 @@ namespace SceneControl.Server
 
             if (_speedzones.Any(sz => sz.Position.DistanceTo(zonePosition) <= sz.Radius))
             {
-                player.TriggerEvent("SceneControl:Notes.Notes.Client:Notify", "~r~Speed Zone~w~: There is already a speed limit set for this location.");
+                player.TriggerEvent("SceneControl:Client:Notify", "~r~Speed Zone~w~: There is already a speed limit set for this location.");
             }
             else if (playerZone is not null)
             {
-                player.TriggerEvent("SceneControl:Notes.Notes.Client:Notify", $"~r~Speed Zone~w~: You already have a speed zone placed at {new Vector2(playerZone.Position.X, playerZone.Position.Y)}.");
+                player.TriggerEvent("SceneControl:Client:Notify", $"~r~Speed Zone~w~: You already have a speed zone placed at {new Vector2(playerZone.Position.X, playerZone.Position.Y)}.");
             }
             else
             {
                 _speedzones.Add(new SpeedZone { Position = zonePosition, Radius = zoneRadius, Speed = zoneSpeed, PlayerId = int.Parse(player.Handle) });
 
-                TriggerClientEvent("SceneControl:Notes.Notes.Client:UpdateSpeedZones", Json.Stringify(_speedzones));
+                TriggerClientEvent("SceneControl:Client:UpdateSpeedZones", Json.Stringify(_speedzones));
             }
         }
 
-        [EventHandler("SceneControl:Notes.Server:DeleteSpeedZone")]
+        [EventHandler("SceneControl:Server:DeleteSpeedZone")]
         private void OnDeleteSpeedZone([FromSource] Player player, Vector3 playerPos)
         {
             SpeedZone closestZone = null;
@@ -103,11 +103,11 @@ namespace SceneControl.Server
                 Log.InfoOrError($"{player.Name} deleted a speed zone at {closestZone.Position}.", "SCENE CONTROL");
 
                 _speedzones.Remove(closestZone);
-                TriggerClientEvent("ceneControl:Notes.Notes.Client:UpdateSpeedZones", Json.Stringify(_speedzones));
+                TriggerClientEvent("ceneControl:Client:UpdateSpeedZones", Json.Stringify(_speedzones));
             }
             else
             {
-                player.TriggerEvent("SceneControl:Notes.Notes.Client:Notify", $"~r~Speed Zone~w~: You are not inside any active speed zones.");
+                player.TriggerEvent("SceneControl:Client:Notify", $"~r~Speed Zone~w~: You are not inside any active speed zones.");
             }
         }
         #endregion

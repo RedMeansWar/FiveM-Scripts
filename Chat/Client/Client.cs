@@ -13,7 +13,7 @@ namespace Chat.Client
     public class Client : ClientCommonScript
     {
         #region Variables
-        internal bool _chatInit, _chatActive, _ran;
+        internal bool _chatInit, _chatActive;
         internal string _twitterName;
         internal Character _currentCharacter;
         internal List<ChatSuggestion> _suggestions;
