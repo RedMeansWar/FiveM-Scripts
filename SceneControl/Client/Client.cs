@@ -12,24 +12,24 @@ namespace SceneControl.Client
     public class Client : ClientCommonScript
     {
         #region Variables
-        internal Prop _visualizedProp;
-        internal SceneProp _visualizedSceneProp;
+        public static Prop VisualizedProp;
+        public static SceneProp VisualizedSceneProp;
         internal readonly List<SpeedZone> _speedzones = new();
         #endregion
 
         #region Constructor
-        public Client() => TriggerServerEvent("SceneControl:Notes.Server:GetAllSpeedZones");
+        public Client() => TriggerServerEvent("SceneControl:Server:GetAllSpeedZones");
         #endregion
 
         #region Event Handlers
         [EventHandler("onResourceStop")]
         private void OnResourceStop(string resourceName)
         {
-            if (resourceName == GetCurrentResourceName() && Entity.Exists(_visualizedProp))
+            if (resourceName == GetCurrentResourceName() && Entity.Exists(VisualizedProp))
             {
-                _visualizedProp.Delete();
-                _visualizedProp = null;
-                _visualizedSceneProp = null;
+                VisualizedProp.Delete();
+                VisualizedProp = null;
+                VisualizedSceneProp = null;
             }
         }
 
@@ -60,7 +60,7 @@ namespace SceneControl.Client
             NetworkRegisterEntityAsNetworked(ObjToNet(spawnedProp.Handle));
             PlaceObjectOnGroundProperly(spawnedProp.Handle);
 
-            TriggerServerEvent("SceneControl:Notes.Server:Log", $"{ClientPlayer.Name} (#{ClientPlayer.ServerId}) spawned prop [{selectedProp.DisplayName}] at \n{playerPos}");
+            TriggerServerEvent("SceneControl:Server:Log", $"{ClientPlayer.Name} (#{ClientPlayer.ServerId}) spawned prop [{selectedProp.DisplayName}] at \n{playerPos}");
         }
 
         [EventHandler("SceneControl:Client:DeleteClosestProp")]
@@ -98,11 +98,11 @@ namespace SceneControl.Client
         private void OnVisualizeProp(int propIndex)
         {
             if (ClientPed.IsSittingInVehicle()) return;
-            _visualizedSceneProp = SceneConstants.SceneProps[propIndex];
+            VisualizedSceneProp = SceneConstants.SceneProps[propIndex];
         }
 
         [EventHandler("SceneControl:Client:ClearVisualizer")]
-        private void OnClearvisualizer() => _visualizedSceneProp = null;
+        private void OnClearvisualizer() => VisualizedSceneProp = null;
 
         [EventHandler("SceneControl:Client:UpdateSpeedZones")]
         private void OnUpdateSpeedZones(string json)
@@ -145,16 +145,16 @@ namespace SceneControl.Client
         [Tick]
         private async Task PropVisualizationTick()
         {
-            if (Entity.Exists(_visualizedProp))
+            if (Entity.Exists(VisualizedProp))
             {
-                _visualizedProp.Delete();
-                _visualizedProp = null;
+                VisualizedProp.Delete();
+                VisualizedProp = null;
             }
 
-            if (_visualizedSceneProp is null || ClientPed.IsSittingInVehicle())
+            if (VisualizedSceneProp is null || ClientPed.IsSittingInVehicle())
             {
-                _visualizedProp = null;
-                _visualizedSceneProp = null;
+                VisualizedProp = null;
+                VisualizedSceneProp = null;
                 await Delay(1000);
                 return;
             }
@@ -162,11 +162,11 @@ namespace SceneControl.Client
             Vector3 playerPos = ClientPed.GetPositionOffset(new(0, 1f, 0));
             float playerHeading = ClientPed.Heading;
 
-            _visualizedProp = new Prop(CreateObject(new Model(_visualizedSceneProp.ModelName), playerPos.X, playerPos.Y, playerPos.Z - 1f, false, false, false));
+            VisualizedProp = new Prop(CreateObject(new Model(VisualizedSceneProp.ModelName), playerPos.X, playerPos.Y, playerPos.Z - 1f, false, false, false));
 
-            PlaceObjectOnGroundProperly(_visualizedProp.Handle);
-            SetEntityCollision(_visualizedProp.Handle, false, false);
-            SetEntityAlpha(_visualizedProp.Handle, 100, 0);
+            PlaceObjectOnGroundProperly(VisualizedProp.Handle);
+            SetEntityCollision(VisualizedProp.Handle, false, false);
+            SetEntityAlpha(VisualizedProp.Handle, 100, 0);
 
             await Task.FromResult(0);
         }

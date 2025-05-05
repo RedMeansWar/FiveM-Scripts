@@ -97,29 +97,30 @@ namespace Priority.Server
                 UpdatePriorityState();
             }
         }
-
-        [EventHandler("Priority:Server:TransferPriority")]
-        private void OnTransferPrioriity([FromSource] Player player)
-        {
-            if (_priorityHolder is null)
-            {
-                player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, args = new[] { "[Priority]", "There is no current active priority to transfer ownership for." } });
-            }
-            else if (_priorityForceEndAt == null)
-            {
-                player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, args = new[] { "[Priority]", "The starter of the priority must be disconnected from the server in order to transfer ownership." } });
-            }
-            else
-            {
-                Log.InfoOrError($"{player.Name} transferred the ownership of the current priority.", "Priority");
-
-                _priorityHolder = player.Name;
-                _priorityHolderLicense = player.Identifiers["license"];
-                _priorityForceEndAt = null;
-
-                UpdatePriorityState();
-            }
-        }
+        
+        // honestly I don't remember why I added this. I will leave it here if I can use it later?
+        // [EventHandler("Priority:Server:TransferPriority")]
+        // private void OnTransferPrioriity([FromSource] Player player)
+        // {
+        //     if (_priorityHolder is null)
+        //     {
+        //         player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, args = new[] { "[Priority]", "There is no current active priority to transfer ownership for." } });
+        //     }
+        //     else if (_priorityForceEndAt == null)
+        //     {
+        //         player.TriggerEvent("chat:addMessage", new { color = new[] { 255, 0, 0 }, args = new[] { "[Priority]", "The starter of the priority must be disconnected from the server in order to transfer ownership." } });
+        //     }
+        //     else
+        //     {
+        //         Log.InfoOrError($"{player.Name} transferred the ownership of the current priority.", "Priority");
+        //
+        //         _priorityHolder = player.Name;
+        //         _priorityHolderLicense = player.Identifiers["license"];
+        //         _priorityForceEndAt = null;
+        //
+        //         UpdatePriorityState();
+        //     }
+        // }
 
         [EventHandler("Priority:Server:HoldPriority")]
         private void OnHoldPriority([FromSource] Player player, double holdDuration = 0)
@@ -152,7 +153,7 @@ namespace Priority.Server
             UpdatePriorityState();
         }
 
-        [EventHandler("Priority:Server:resetPriority")]
+        [EventHandler("Priority:Server:ResetPriority")]
         private void OnResetPriority([FromSource] Player player)
         {
             if (!IsPlayerAceAllowed(player.Handle, "priority.ResetPriority"))

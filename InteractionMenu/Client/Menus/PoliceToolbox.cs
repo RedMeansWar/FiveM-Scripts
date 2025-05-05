@@ -8,8 +8,7 @@ using static CitizenFX.Core.Native.API;
 
 namespace InteractionMenu.Client.Menus
 {
-    public class PoliceToolbox : ClientCommonScript
-    {
+    public class PoliceToolbox : ClientCommonScript {
         public static Menu GetMenu()
         {
             Menu policeMenu = new(Client.MenuTitle, "~b~Police Toolbox");
@@ -139,7 +138,7 @@ namespace InteractionMenu.Client.Menus
                 _ => "gun"
             };
 
-            if (ClientPed.IsInPoliceVehicle && ClientPed.CanDoAction() || closestVehicle?.ClassType == VehicleClass.Emergency && ClientPed.CanDoAction())
+            if (ClientPed.IsInPoliceVehicle && ClientPed.CanDoAction() || closestVehicle?.ClassType == VehicleClass.Emergency)
             {
                 Weapon playerWeapon = ClientPed.Weapons[hash];
                 if (playerWeapon is not null)

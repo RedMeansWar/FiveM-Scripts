@@ -101,7 +101,7 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Notes.Server:StartPriority");
+            TriggerServerEvent("Priority:Server:StartPriority");
         }
 
         [EventHandler("Priority:Client:EndPriority")]
@@ -113,22 +113,22 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Notes.Server:EndPriority", endDuration);
+            TriggerServerEvent("Priority:Server:EndPriority", endDuration);
         }
+        // honestly I don't remember why I added this. I will leave it here if I can use it later?
+        // [EventHandler("Priority:Client:TransferPriority")]
+        // private void OnTransferPriority()
+        // {
+        //     if (_currentCharacter.Department is not "Civ")
+        //     {
+        //         Hud.SendChatMessage("You need to be a civilian character to do this.", "[Priority]", 255, 0, 0);
+        //         return;
+        //     }
+        //
+        //     TriggerServerEvent("Priority:Server:TransferPriority");
+        // }
 
-        [EventHandler("Priority:Client:TransferPriority")]
-        private void OnTransferPriority()
-        {
-            if (_currentCharacter.Department is not "Civ")
-            {
-                Hud.SendChatMessage("You need to be a civilian character to do this.", "[Priority]", 255, 0, 0);
-                return;
-            }
-
-            TriggerServerEvent("Priority:Notes.Server:TransferPriority");
-        }
-
-        [EventHandler("Priority:Client:holdPriority")]
+        [EventHandler("Priority:Client:HoldPriority")]
         private void OnHoldPriority(int holdDuration)
         {
             if (_currentCharacter.Department is not "Civ")
@@ -137,18 +137,18 @@ namespace Priority.Client
                 return;
             }
 
-            TriggerServerEvent("Priority:Notes.Server:HoldPriority", holdDuration);
+            TriggerServerEvent("Priority:Server:HoldPriority", holdDuration);
         }
 
         [EventHandler("Priority:Client:ResetPriority")]
-        private void OnResetPriority() => TriggerServerEvent("Priority:Notes.Server:ResetPriority");
+        private void OnResetPriority() => TriggerServerEvent("Priority:Server:ResetPriority");
         #endregion
 
         #region Ticks
         [Tick]
         private async Task PriorityTick()
         {
-            if (_currentCharacter is null || _currentCharacter.Department is not "Civ")
+            if (_currentCharacter?.Department is not "Civ")
             {
                 await Delay(1000);
                 return;
@@ -183,10 +183,7 @@ namespace Priority.Client
                     priorityStatus = $"~g~Inactive";
                 }
 
-                if (priorityStatus is not null)
-                {
-                    Hud.DrawText2d(1.203f, -0.075f, 0.419f, $"Priority Status: {priorityStatus}", 255, 255, 255, 255);
-                }
+                Hud.DrawText2d(1.203f, -0.075f, 0.419f, $"Priority Status: {priorityStatus}", 255, 255, 255, 255);
             }
         }
         #endregion

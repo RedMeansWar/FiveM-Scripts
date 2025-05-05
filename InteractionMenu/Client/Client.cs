@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MenuAPI;
 using Common;
 using Common.Client;
@@ -45,13 +46,17 @@ namespace InteractionMenu.Client
         private void ReadConfigFile()
         {
             string data = LoadResourceFile(GetCurrentResourceName(), "config.ini");
+            List<string> keys = new() { "OpenMenuKey", "MenuTitle" };
 
             _controlKey = Config.GetValue(data, "Menu", "OpenMenuKey", 244);
             MenuTitle = Config.GetValue(data, "Menu", "MenuTitle","RMenu");
-            if (!Config.KeyExists(data, "Menu", "OpenMenuKey") || !Config.KeyExists(data, "Menu", "MenuTitle"))
+            keys.ForEach(key =>
             {
-                Log.InfoOrError("ERROR: 'config.ini' not configured properly or is missing. Please check if the config is there or has any data inside of it.", "INTERACTION MENU");
-            }
+                if (!Config.KeyExists(data, "Menu", key))
+                {
+                    Log.InfoOrError("ERROR: 'config.ini' not configured properly or is missing. Please check if the config is there or has any data inside of it.", "INTERACTION MENU");
+                }
+            });
         }
 
         private void Menu_OnItemSelect(Menu menu, MenuItem item, int itemIndex)

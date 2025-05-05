@@ -312,7 +312,7 @@ namespace Common.Client
         /// <param name="vehicle">The vehicle whose tires are to be checked.</param>
         /// <param name="radius">The maximum distance within which to search for the closest tire. Default is 1.5 units.</param>
         /// <returns>
-        /// A <see cref="Tire"/> object representing the closest tire within the specified radius;
+        /// A <see cref="Wheel"/> object representing the closest tire within the specified radius;
         /// otherwise, returns <c>null</c> if no tire is found within the radius.
         /// </returns>
         public static Wheel GetClosestWheel(this Vehicle vehicle, float radius = 1.5f)
@@ -705,7 +705,7 @@ namespace Common.Client
         /// <summary>
         /// Calculates the squared distance between a ped and a target position.
         /// </summary>
-        /// <param name="blip">The blip to calculate the distance from.</param>
+        /// <param name="ped">The blip to calculate the distance from.</param>
         /// <param name="targetPos">The target position to measure the distance to.</param>
         /// <returns>The distance between the ped and the target position.</returns>
         public static float DistanceTo(this Ped ped, Vector3 targetPos)

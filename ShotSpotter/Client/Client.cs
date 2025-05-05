@@ -144,7 +144,7 @@ namespace ShotSpotter.Client
                 string zoneName = GetLabelText(GetNameOfZone(playerPos.X, playerPos.Y, playerPos.Z));
                 string caliber = ClientPed.Weapons.Current.Group == WeaponGroup.Pistol ? "Small" : "Large";
 
-                TriggerServerEvent("ShotSpotter:Notes.Server:ShowNotification");
+                TriggerServerEvent("ShotSpotter:Server:ShowNotification");
             }
         }
         #endregion
