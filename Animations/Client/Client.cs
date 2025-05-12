@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Common.Client;
 using CitizenFX.Core;
 using CitizenFX.Core.Native;
+using Common;
+using Common.Client.Models;
 using static CitizenFX.Core.Native.API;
 
 namespace Animations.Client
@@ -10,7 +12,12 @@ namespace Animations.Client
     public class Client : ClientCommonScript
     {
         #region Variables
-        internal bool _handsUp, _handsOnHead, _handsUpKnees, _usingCamera, _selfieCamera;
+        internal bool _handsUp, _handsOnHead, _handsUpKnees, _usingCamera, _selfieCamera, _animLoaded;
+        internal int _radioKey; // config variables
+        #endregion
+
+        #region Constructor
+        public Client() => ReadConfigFile();
         #endregion
         
         #region Commands
@@ -134,7 +141,6 @@ namespace Animations.Client
                 Hud.IsRadarVisible = true;
             }
         }
-        
         #endregion
 
         #region Event Handlers
@@ -149,6 +155,33 @@ namespace Animations.Client
         }
         #endregion
 
+        #region Methods
+        private void PlayRadioAnim(bool playAnim)
+        {
+            if (playAnim)
+            {
+                Tick += RadioAnimationTick;
+            }
+            else
+            {
+                Tick -= RadioAnimationTick;
+            }
+        }
+
+        private bool CanPedPlayRadioAnimation(Ped ped) =>  ped.IsDead || ped.IsSwimming || ped.IsSwimmingUnderWater || ped.IsTryingToEnterALockedVehicle || !ped.Exists();
+
+        private void ReadConfigFile()
+        {
+            string data = LoadResourceFile(GetCurrentResourceName(), "config.ini");
+            _radioKey = Config.GetValue(data, "Animations", "RadioAnimationKey", 19);
+
+            if (!Config.KeyExists(data, "Animations", "RadioAnimationKey"))
+            {
+                Log.Error("No radio animation key found in config file!", "ANIMATIONS");
+            }
+        }
+        #endregion
+        
         #region Ticks
         private async Task DisableControlsTick()
         {
@@ -178,6 +211,32 @@ namespace Animations.Client
             if (Controls.IsControlJustPressed(Control.NextCamera))
             {
                 Function.Call((Hash)2635073306796480568L, _selfieCamera);
+            }
+        }
+
+        [Tick]
+        private async Task RadioAnimationTick()
+        {
+            if (!_animLoaded)
+            {
+                RequestAnimDict("random@arrests");
+                if (HasAnimDictLoaded("random@arrests"))
+                {
+                    await Delay(100);
+                }
+                
+                _animLoaded = true;
+            }
+
+            if (Controls.IsControlJustPressed((Control)_radioKey) && ClientPed is not null && CanPedPlayRadioAnimation(ClientPed))
+            {
+                await ClientPed.Task.PlayAnimation("", "", 0.8f, 0.8f, -1, AnimationFlags.AllowRotation | AnimationFlags.Loop | AnimationFlags.StayInEndFrame | AnimationFlags.UpperBodyOnly, 0.8f);
+
+                while (true)
+                {
+                    ClientPed.Task.ClearSecondary();
+                    break;
+                }
             }
         }
         #endregion

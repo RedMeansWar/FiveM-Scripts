@@ -23,13 +23,13 @@ namespace InteractionMenu.Client.Menus
             civMenu.AddMenuItem(new(Constants.MenuGoBack));
             civMenu.AddMenuItem(new(Constants.MenuClose));
             
-            civMenu.OnItemSelect += CivMenuOnOnItemSelect;
-            civMenu.OnListItemSelect += CivMenuOnOnListItemSelect;
+            civMenu.OnItemSelect += CivMenu_OnItemSelect;
+            civMenu.OnListItemSelect += CivMenu_OnListItemSelect;
             
             return civMenu;
         }
 
-        private static void CivMenuOnOnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
+        private static void CivMenu_OnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
         {
             string item = menuItem.Text;
             switch (item)
@@ -40,8 +40,8 @@ namespace InteractionMenu.Client.Menus
                 case "~r~Close": MenuController.CloseAllMenus(); break;
             }
         }
-
-        private static void CivMenuOnOnListItemSelect(Menu menu, MenuListItem listItem, int selectedIndex, int itemIndex)
+        
+        private static void CivMenu_OnListItemSelect(Menu menu, MenuListItem listItem, int selectedIndex, int itemIndex)
         {
             string item = listItem.Text;
             switch (item)

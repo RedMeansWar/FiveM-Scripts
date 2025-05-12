@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Common;
 using Common.Client;
 using CitizenFX.Core;
+using SceneControl.Common;
 using static CitizenFX.Core.Native.API;
 
 namespace SceneControl.Client
@@ -129,7 +130,7 @@ namespace SceneControl.Client
 
             foreach (SpeedZone uz in updatedSpeedzones)
             {
-                Vector3 zonePos = uz.Position;
+                Vector3 zonePos = new(uz.X, uz.Y, uz.Z);
                 uz.Blip = AddBlipForRadius(zonePos.X, zonePos.Y, zonePos.Z, uz.Radius);
 
                 SetBlipColour(uz.Blip, 3);

@@ -54,11 +54,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Client.cs" />
-    <Compile Include="../Shared/**/*.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SceneControl.Common\SceneControl.Common.csproj">
+      <Project>{33478b81-111a-43c9-89ac-c29c9aff1e8e}</Project>
+      <Name>SceneControl.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\Common\Client\Common.Client.projitems" Label="Shared" />
   <Import Project="..\..\Common\Common\Common.projitems" Label="Shared" />

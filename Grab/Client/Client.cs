@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Grab.Common;
 using Common.Client;
 using CitizenFX.Core;
 using static CitizenFX.Core.Native.API;
@@ -10,8 +11,6 @@ namespace Grab.Client
     public class Client : ClientCommonScript
     {
         #region Variables
-        internal bool _grabbed;
-        internal int _escapeAttempts;
         internal Player _grabbedPlayer, _grabberPlayer;
         internal Random _random = new();
         #endregion
@@ -20,7 +19,7 @@ namespace Grab.Client
         [Command("grab")]
         private void GrabCommand()
         {
-            if (_grabbed) return;
+            if (GrabConstants.Grabbed) return;
 
             Player closestPlayer = GetClosestPlayer(4f);
             if (closestPlayer is null)
@@ -30,6 +29,7 @@ namespace Grab.Client
             }
 
             _grabbedPlayer = closestPlayer;
+            GrabConstants.GrabbedPlayer = closestPlayer.Handle;
             TriggerServerEvent("Grab:Server:GrabClosestPlayer", closestPlayer.ServerId);
         }
         #endregion
@@ -38,10 +38,11 @@ namespace Grab.Client
         [EventHandler("Grab:Client:GetGrabbedPlayer")]
         private void OnGetGrabbedPlayer(string sender)
         {
-            _grabbed = !_grabbed;
-            if (_grabbed)
+            GrabConstants.Grabbed = !GrabConstants.Grabbed;
+            if (GrabConstants.Grabbed)
             {
                 _grabberPlayer = Players[int.Parse(sender)];
+                GrabConstants.GrabberPlayer = Players[int.Parse(sender)].Handle;
 
                 Tick += DisableControlsTick;
                 Tick += GrabTick;
@@ -57,8 +58,9 @@ namespace Grab.Client
                 Tick -= GrabTick;
 
                 _grabberPlayer = null;
+                GrabConstants.GrabberPlayer = 0;
                 ClientPed.Detach();
-                _escapeAttempts = 0;
+                GrabConstants.GrabEscapeAttempts = 0;
             }
         }
 
@@ -69,34 +71,30 @@ namespace Grab.Client
         #region Ticks
         private async Task GrabTick()
         {
-            int escapeAttempts = 10;
-            if (ClientPed.IsCuffed)
-            {
-                escapeAttempts += 10;
-            }
+            if (ClientPed.IsCuffed) GrabConstants.GrabEscapeAttempts += 10;
 
             AttachEntityToEntity(ClientPed.Handle, _grabberPlayer.Character.Handle, 11816, 0.45f, 0.35f, 0f, 0f, 0f, 0f, false, false, false, false, 2, true);
 
-            if (Controls.IsControlJustPressedRegardless(Control.FrontendRdown) && escapeAttempts < 3 && !ClientPlayer.IsDead)
+            if (Controls.IsControlJustPressedRegardless(Control.FrontendRdown) && GrabConstants.GrabEscapeAttempts < 3 && !ClientPlayer.IsDead)
             {
-                escapeAttempts++;
-                if (escapeAttempts == 1)
+                GrabConstants.GrabEscapeAttempts++;
+                if (GrabConstants.GrabEscapeAttempts == 1)
                 {
                     TriggerServerEvent("Grab:Server:Notify", _grabbedPlayer.ServerId, "The person you're grabbing is attempting to wiggle out from your grip!");
                 }
 
                 int random = _random.Next(100);
-                if (random < escapeAttempts)
+                if (random < GrabConstants.GrabEscapeAttempts)
                 {
                     TriggerServerEvent("Grab:Server:Notify", _grabbedPlayer.ServerId, "They've wiggled out from your grip!");
                     ClientPed.Detach();
 
-                    escapeAttempts = 0;
+                    GrabConstants.GrabEscapeAttempts = 0;
 
                     Tick -= DisableControlsTick;
                     Tick -= GrabTick;
                 }
-                else if (escapeAttempts > 3)
+                else if (GrabConstants.GrabEscapeAttempts > 3)
                 {
                     Hud.DisplayNotification("~y~You failed to wiggle out from their grip!", true);
                     ClearHelp(true);

@@ -48,13 +48,13 @@ namespace InteractionMenu.Client.Menus
             
             MenuController.BindMenuItem(vehicleMenu, confDeleteMenu, confDeleteBtn);
             
-            vehicleMenu.OnItemSelect += VehicleMenuOnOnItemSelect;
-            vehicleMenu.OnListItemSelect += VehicleMenuOnOnListItemSelect;
+            vehicleMenu.OnItemSelect += VehicleMenu_OnItemSelect;
+            vehicleMenu.OnListItemSelect += VehicleMenu_OnListItemSelect;
             
             return vehicleMenu;
         }
 
-        private static void VehicleMenuOnOnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
+        private static void VehicleMenu_OnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
         {
             string item = menuItem.Text;
             switch (item)
@@ -68,7 +68,7 @@ namespace InteractionMenu.Client.Menus
             }
         }
 
-        private static void VehicleMenuOnOnListItemSelect(Menu menu, MenuListItem listItem, int selectedIndex, int itemIndex)
+        private static void VehicleMenu_OnListItemSelect(Menu menu, MenuListItem listItem, int selectedIndex, int itemIndex)
         {
             string item = listItem.Text;
             switch (item)

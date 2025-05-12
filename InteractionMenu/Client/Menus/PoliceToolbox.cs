@@ -33,13 +33,13 @@ namespace InteractionMenu.Client.Menus
             policeMenu.AddMenuItem(new(Constants.MenuGoBack));
             policeMenu.AddMenuItem(new(Constants.MenuClose));
             
-            policeMenu.OnItemSelect += PoliceMenuOnOnItemSelect;
-            policeMenu.OnListItemSelect += PoliceMenuOnOnListItemSelect;
+            policeMenu.OnItemSelect += PoliceMenu_OnItemSelect;
+            policeMenu.OnListItemSelect += PoliceMenu_OnListItemSelect;
             
             return policeMenu;
         }
 
-        private static void PoliceMenuOnOnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
+        private static void PoliceMenu_OnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
         {
             string item = menuItem.Text;
             Vehicle closestVehicle = GetClosestVehicle(1f);
@@ -85,7 +85,7 @@ namespace InteractionMenu.Client.Menus
             }
         }
 
-        private static void PoliceMenuOnOnListItemSelect(Menu menu, MenuListItem listItem, int selectedIndex, int itemIndex)
+        private static void PoliceMenu_OnListItemSelect(Menu menu, MenuListItem listItem, int selectedIndex, int itemIndex)
         {
             string item = listItem.Text;
             switch (item)

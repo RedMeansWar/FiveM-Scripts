@@ -15,8 +15,8 @@ namespace InteractionMenu.Client.Menus
             settingsMenu.AddMenuItem(new(Constants.MenuGoBack) { Label = Constants.MenuArrowBackward });
             settingsMenu.AddMenuItem(new(Constants.MenuClose));
 
-            settingsMenu.OnItemSelect += SettingsMenuOnOnItemSelect;
-            settingsMenu.OnCheckboxChange += SettingsMenuOnOnCheckboxChange;
+            settingsMenu.OnItemSelect += SettingsMenu_OnItemSelect;
+            settingsMenu.OnCheckboxChange += SettingsMenu_OnCheckboxChange;
             
             return settingsMenu;
         }
@@ -30,7 +30,7 @@ namespace InteractionMenu.Client.Menus
         #endregion
 
         #region Methods
-        private static void SettingsMenuOnOnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
+        private static void SettingsMenu_OnItemSelect(Menu menu, MenuItem menuItem, int itemIndex)
         {
             string item = menuItem.Label;
             switch (item)
@@ -41,7 +41,7 @@ namespace InteractionMenu.Client.Menus
         }
 
         
-        private static void SettingsMenuOnOnCheckboxChange(Menu menu, MenuCheckboxItem menuItem, int itemIndex, bool newCheckedState)
+        private static void SettingsMenu_OnCheckboxChange(Menu menu, MenuCheckboxItem menuItem, int itemIndex, bool newCheckedState)
         {
             string item = menuItem.Label;
             if (item == "Right-Align Menu" && newCheckedState)

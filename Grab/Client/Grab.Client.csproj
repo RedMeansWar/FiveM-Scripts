@@ -60,6 +60,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Grab.Common.csproj">
+      <Project>{a957d0b5-cecb-4220-986e-23c5cf8f9912}</Project>
+      <Name>Grab.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="..\..\Common\Client\Common.Client.projitems" Label="Shared" />
   <Import Project="..\..\Common\Common\Common.projitems" Label="Shared" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
